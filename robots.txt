@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://daelamir2002-rgb.github.io/claudy-site/sitemap.xml

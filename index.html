@@ -5,7 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Claudy</title>
 <meta name="description" content="Claudy יושב בשורת התפריטים, רואה את המסך יחד איתך, מצביע על הכפתור הנכון ועושה משימות. בעברית.">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="icon" href="assets/mark.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/app-icon.png">
+<link rel="canonical" href="https://daelamir2002-rgb.github.io/claudy-site/">
+<meta name="theme-color" content="#0F0B16">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="he_IL">
+<meta property="og:site_name" content="Claudy">
+<meta property="og:title" content="Claudy · עוזר שיושב לך על המסך">
+<meta property="og:description" content="מצביע איפה ללחוץ, ועושה כשמבקשים. ל-Mac, בכל שפה, בקול או בכתב.">
+<meta property="og:url" content="https://daelamir2002-rgb.github.io/claudy-site/">
+<meta property="og:image" content="https://daelamir2002-rgb.github.io/claudy-site/assets/share.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Claudy: דמות עם שתי עיניים במסגרת כתומה, ולידה הכיתוב עוזר שיושב לך על המסך">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=IBM+Plex+Sans+Hebrew:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
@@ -18,8 +34,8 @@
   --plum-2: #261D35;
   --plum-3: #3A2E4E;
   --mist: #F6F3FA;
-  --mist-2: rgba(246, 243, 250, .7);
-  --mist-3: rgba(246, 243, 250, .45);
+  --mist-2: rgba(246, 243, 250, .78);
+  --mist-3: rgba(246, 243, 250, .62);
   --line: rgba(246, 243, 250, .1);
   --ember: #FF7A2B;
   --ember-hi: #FFB45C;
@@ -54,6 +70,11 @@ p { margin: 0; }
 }
 .grain { position: fixed; inset: 0; z-index: -1; opacity: .06; pointer-events: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+
+/* skip link */
+.skip { position: absolute; inset-inline-start: 12px; top: -60px; z-index: 200; background: var(--ember); color: var(--plum); padding: 10px 16px; border-radius: 10px; font-weight: 600; text-decoration: none; }
+.skip:focus { top: calc(12px + env(safe-area-inset-top, 0px)); }
+main:focus { outline: none; }
 
 /* nav */
 nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 40; backdrop-filter: blur(14px) saturate(1.3);
@@ -294,7 +315,7 @@ nav .btn { margin-inline-start: 4px; }
 .dots button { all: unset; cursor: pointer; width: 10px; height: 10px; border-radius: 10px; background: rgba(255, 255, 255, .22); position: relative; overflow: hidden;
   transition: width .35s cubic-bezier(.3, 1.3, .5, 1), background .3s; }
 .dots button:hover { background: rgba(255, 255, 255, .4); }
-.dots button[aria-selected="true"] { width: 34px; background: rgba(255, 122, 43, .3); }
+.dots button[aria-current="true"] { width: 34px; background: rgba(255, 122, 43, .3); }
 .dots button i { position: absolute; inset: 0 0 0 auto; width: calc(var(--p, 0) * 100%); background: var(--grad); }
 .dots button:focus-visible { outline: 2px solid var(--ember-hi); outline-offset: 3px; }
 .explain { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 36px; align-items: start; margin: 34px auto 0; max-width: 980px; }
@@ -359,6 +380,9 @@ nav .btn { margin-inline-start: 4px; }
 .privacy li { display: grid; grid-template-columns: 22px 1fr; gap: 12px; color: var(--mist-2); }
 .privacy li::before { content: ""; width: 10px; height: 10px; margin-top: 9px; border-radius: 1px 10px 10px 10px; background: var(--grad); }
 .privacy li b { color: var(--mist); font-weight: 600; }
+.privacy .plink { grid-column: 2; color: var(--mist-2); font-size: 15px; margin-top: -4px; }
+.privacy .plink a { color: var(--lilac); }
+@media (max-width: 920px) { .privacy .plink { grid-column: 1; } }
 
 /* download */
 .dl { padding-block: 110px 80px; text-align: center; display: grid; justify-items: center; gap: 18px; }
@@ -379,6 +403,9 @@ nav .btn { margin-inline-start: 4px; }
 footer { padding-block: 30px 50px; color: var(--mist-3); font-size: 14px; border-top: 1px solid var(--line); }
 footer .wrap { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
 footer .logo svg { width: 22px; height: 22px; } footer .logo b { font-size: 18px; }
+footer .legal { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-inline-start: auto; }
+footer .legal a { color: var(--mist-2); }
+footer .ver { width: 100%; }
 
 /* the Claudy that follows the mouse */
 #buddy { position: fixed; left: 0; top: 0; z-index: 100; pointer-events: none; width: 66px; height: 44px; will-change: transform; transition: opacity .3s; }
@@ -443,6 +470,7 @@ footer .logo svg { width: 22px; height: 22px; } footer .logo b { font-size: 18px
   </defs>
 </svg>
 
+<a class="skip" href="#main">דילוג לתוכן</a>
 <nav aria-label="ראשי">
   <div class="wrap">
     <a class="logo" href="#top" aria-label="Claudy"><svg><use href="#mark"/></svg><b>claudy</b></a>
@@ -461,9 +489,9 @@ footer .logo svg { width: 22px; height: 22px; } footer .logo b { font-size: 18px
         <a class="btn" href="#download" data-say="בוא נתקין אותי"><svg width="18" height="18"><use href="#apple"/></svg>הורדה ל-Mac</a>
         <a class="btn ghost" href="#demos" data-say="גוללים, ואני מראה">ככה זה נראה</a>
       </div>
-      <p class="fine">עובד עם חשבון Claude שכבר יש לך.</p>
+      <p class="fine">עובד עם חשבון Claude שכבר יש לכם. לבני 18 ומעלה.</p>
     </div>
-    <div class="screen" id="heroScene" data-say="ככה אני עוזר" aria-label="הדגמה: שואלים את Claudy איך מחליפים רקע, והוא מראה איפה ללחוץ">
+    <div class="screen" id="heroScene" data-say="ככה אני עוזר" role="img" aria-label="הדגמה: שואלים את Claudy איך מחליפים רקע, והוא מראה איפה ללחוץ">
       <div class="wall2" id="hWall"></div>
       <div class="menubar"><span>הגדרות מערכת</span><span>עריכה</span><span class="face" id="hFace"></span><span class="clock">09:41</span></div>
       <div class="win settings">
@@ -506,7 +534,7 @@ footer .logo svg { width: 22px; height: 22px; } footer .logo b { font-size: 18px
   </div>
 </header>
 
-<main>
+<main id="main" tabindex="-1">
 <section class="wrap" id="demos">
   <div class="section-head">
     <h2>איך תשתמשו בו ביום-יום?</h2>
@@ -514,7 +542,7 @@ footer .logo svg { width: 22px; height: 22px; } footer .logo b { font-size: 18px
   </div>
   <div class="carousel" id="car" aria-roledescription="קרוסלה">
     <div class="slide" data-i="0">
-      <div class="screen stage" data-scene="desk" data-say="תראו כמה בלגן">
+      <div class="screen stage" aria-hidden="true" data-scene="desk" data-say="תראו כמה בלגן">
       <div class="menubar"><span>Finder</span><span>File</span><span>View</span><span class="face"></span><span class="clock">16:20</span></div>
       <div class="desk"></div>
       <div class="cl"><svg viewBox="0 0 120 80"><use href="#claudy"/></svg></div>
@@ -522,7 +550,7 @@ footer .logo svg { width: 22px; height: 22px; } footer .logo b { font-size: 18px
     </div>
     </div>
     <div class="slide" data-i="1">
-      <div class="screen stage" data-scene="edit" data-say="שלושה צעדים, זה הכל">
+      <div class="screen stage" aria-hidden="true" data-scene="edit" data-say="שלושה צעדים, זה הכל">
       <div class="menubar"><span>Editor</span><span>File</span><span>Clip</span><span class="face"></span><span class="clock">11:05</span></div>
       <div class="win ed">
         <div class="bar"><i></i><i></i><i></i><span>טיול לים.mov</span></div>
@@ -542,7 +570,7 @@ footer .logo svg { width: 22px; height: 22px; } footer .logo b { font-size: 18px
     </div>
     </div>
     <div class="slide" data-i="2">
-      <div class="screen stage" data-scene="dict" data-say="אני מקשיב">
+      <div class="screen stage" aria-hidden="true" data-scene="dict" data-say="אני מקשיב">
       <div class="menubar"><span>Messages</span><span>Edit</span><span class="face"></span><span class="clock">18:47</span></div>
       <div class="win chat">
         <div class="bar"><i></i><i></i><i></i><span>אמא</span></div>
@@ -555,7 +583,7 @@ footer .logo svg { width: 22px; height: 22px; } footer .logo b { font-size: 18px
     </div>
     </div>
     <div class="slide" data-i="3">
-      <div class="screen stage" data-scene="shelf" data-say="תנו לי, אני אחזיק">
+      <div class="screen stage" aria-hidden="true" data-scene="shelf" data-say="תנו לי, אני אחזיק">
       <div class="menubar"><span>Safari</span><span>File</span><span class="face"></span><span class="clock">13:12</span></div>
       <div class="win" style="left:6%; top:42%; width:56%; height:52%">
         <div class="bar"><i></i><i></i><i></i><span>טופס הגשה</span></div>
@@ -567,7 +595,7 @@ footer .logo svg { width: 22px; height: 22px; } footer .logo b { font-size: 18px
     </div>
     </div>
     <div class="slide" data-i="4">
-      <div class="screen stage" data-scene="hands" data-say="שנייה, אני על זה">
+      <div class="screen stage" aria-hidden="true" data-scene="hands" data-say="שנייה, אני על זה">
       <div class="menubar"><span>Messages</span><span>Edit</span><span class="face"></span><span class="clock">19:02</span></div>
       <div class="win msgr">
         <div class="bar"><i></i><i></i><i></i><span>הודעות</span></div>
@@ -586,7 +614,7 @@ footer .logo svg { width: 22px; height: 22px; } footer .logo b { font-size: 18px
     </div>
     </div>
     <div class="slide" data-i="5">
-      <div class="screen stage" data-scene="proj" data-say="קסדה, ויאללה לעבודה">
+      <div class="screen stage" aria-hidden="true" data-scene="proj" data-say="קסדה, ויאללה לעבודה">
       <div class="menubar"><span>Claude</span><span class="face"></span><span class="clock">22:30</span></div>
       <div class="win plist">
         <div data-p="0">video-bot<small>בוט הורדת סרטונים</small></div>
@@ -617,9 +645,9 @@ footer .logo svg { width: 22px; height: 22px; } footer .logo b { font-size: 18px
       <span class="sit" id="nextLabel"></span>
     </button>
   </div>
-  <div class="pbar"><button id="pp" aria-label="השהיה"><svg viewBox="0 0 24 24" width="16" height="16"><path id="ppIcon" d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" fill="currentColor"/></svg></button><div class="scrub"><i id="scrubFill"></i></div><span id="ptime">0:00</span></div>
-  <div class="dots" id="dots" role="tablist" aria-label="דוגמאות"></div>
-  <div class="explain">
+  <div class="pbar"><button id="pp" aria-label="השהיה"><svg viewBox="0 0 24 24" width="16" height="16"><path id="ppIcon" d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" fill="currentColor"/></svg></button><div class="scrub"><i id="scrubFill"></i></div><span id="ptime" aria-hidden="true">0:00</span></div>
+  <div class="dots" id="dots" role="group" aria-label="בחירת דוגמה"></div>
+  <div class="explain" aria-live="polite">
     <div class="ehead">
       <span class="kicker" id="exKick"></span>
       <h3 id="exTitle"></h3>
@@ -643,12 +671,12 @@ footer .logo svg { width: 22px; height: 22px; } footer .logo b { font-size: 18px
   </div>
   <div class="ways two">
     <div class="way" data-say="כתבו לי, אני קורא">
-      <span class="wic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H9l-5 4V6a1 1 0 0 1 1-1z"/><path d="M8 10h8M8 13h5"/></svg></span>
+      <span class="wic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H9l-5 4V6a1 1 0 0 1 1-1z"/><path d="M8 10h8M8 13h5"/></svg></span>
       <h3>הודעה</h3>
       <p>כותבים לו, והוא עונה בבועה קטנה ליד העכבר.</p>
     </div>
     <div class="way" data-say="דברו, אני מקשיב">
-      <span class="wic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span>
+      <span class="wic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span>
       <h3>מיקרופון</h3>
       <p>אומרים, והוא שומע. בכל שפה, וגם הכתבה ישר לכל שדה.</p>
     </div>
@@ -659,11 +687,12 @@ footer .logo svg { width: 22px; height: 22px; } footer .logo b { font-size: 18px
       <h2>Claudy שומר על הפרטיות שלכם</h2>
     </div>
     <ul>
-      <li><span><b>מצלם את המסך רק כשצריך.</b> כדי לראות את המסך Claudy מצלם אותו. הוא לא שומר את התמונות אחרי שענה, וכמובן לא מצלם ברקע כשאין בזה צורך.</span></li>
-      <li><span><b>הסיסמאות שלכם נשארות שלכם.</b> מנהלי סיסמאות לא נכנסים לתמונות שהוא מצלם ולא לזיכרון שלו, גם אם תבקשו ממנו.</span></li>
-      <li><span><b>ההכתבה מתומללת על המחשב.</b> הקול לא יוצא החוצה, רק הטקסט.</span></li>
+      <li><span><b>מצלם את המסך רק כשצריך.</b> כדי לראות את המסך Claudy מצלם אותו, רק כשפונים אליו ואף פעם לא ברקע. הצילום נשלח ל-Claude יחד עם השאלה ונמחק מהמחשב תוך 10 דקות.</span></li>
+      <li><span><b>הסיסמאות שלכם נשארות שלכם.</b> מנהלי סיסמאות לא נכנסים לתמונות שהוא מצלם, והוא לא שומר סיסמאות או קודים, גם אם תבקשו ממנו.</span></li>
+      <li><span><b>ההכתבה מתומללת על המחשב.</b> עם מנוע התמלול המקומי, הקול לא יוצא החוצה, רק הטקסט.</span></li>
       <li><span><b>תשלום, כניסה לחשבון או מחיקה דורשים אישור.</b> כל השאר קורה בלי לשאול.</span></li>
     </ul>
+    <p class="plink">כל הפרטים ב<a href="privacy.html">מדיניות הפרטיות</a>.</p>
   </div>
 </section>
 
@@ -674,17 +703,17 @@ footer .logo svg { width: 22px; height: 22px; } footer .logo b { font-size: 18px
   <div class="platforms">
     <div class="plat main" data-say="זה אני! לחיצה ואני אצלך">
       <h3><svg><use href="#apple"/></svg>Mac</h3>
-      <div class="meta">גרסה <span data-version>1.1.0</span> · macOS 14 ומעלה · Apple Silicon</div>
+      <div class="meta">גרסה <span data-version>1.1.1</span> · macOS 14 ומעלה · Apple Silicon</div>
       <a class="btn" id="dlMac" href="downloads/Claudy-mac.zip" download>הורדה ל-Mac</a>
     </div>
     <div class="plat" data-say="עובדים על זה">
       <h3><svg><use href="#win"/></svg>Windows <span class="soon">בקרוב</span></h3>
       <div class="meta">Windows 10 ו-11</div>
-      <a class="btn ghost" id="dlWin" href="downloads/Claudy-windows.zip" aria-disabled="true">עוד לא זמין</a>
+      <span class="btn ghost" id="dlWin" aria-disabled="true">עוד לא זמין</span>
     </div>
   </div>
   <div class="steps-install">
-    <span>צריך חשבון Claude ואת אפליקציית Claude מותקנת על המחשב.</span>
+    <span>צריך חשבון Claude ואת אפליקציית Claude מותקנת על המחשב. ההורדה וההתקנה כפופות ל<a href="terms.html">תנאי השימוש</a>.</span>
     <span>אחרי ההורדה: פותחים את הקובץ ולוחצים פעמיים על "התקנה". בפעם הראשונה macOS יבקש הרשאה להקלטת מסך ולנגישות.</span>
   </div>
 </section>
@@ -693,7 +722,9 @@ footer .logo svg { width: 22px; height: 22px; } footer .logo b { font-size: 18px
 <footer>
   <div class="wrap">
     <a class="logo" href="#top"><svg><use href="#mark"/></svg><b>claudy</b></a>
-    <span>עוזר מסך אישי, בנוי על Claude.</span><span style="margin-inline-start:auto">גרסה <span data-version>1.1.0</span></span>
+    <span>עוזר מסך אישי שעובד עם Claude. לא מוצר של Anthropic.</span>
+    <nav class="legal" aria-label="מידע משפטי"><a href="privacy.html">מדיניות פרטיות</a><a href="terms.html">תנאי שימוש</a><a href="accessibility.html">הצהרת נגישות</a></nav>
+    <span class="ver">© 2026 · גרסה <span data-version>1.1.1</span></span>
   </div>
 </footer>
 
@@ -1004,7 +1035,7 @@ const player = (() => {
   const ov = $("#playov"), nx = $("#nextov"), beatsEl = $("#beats");
   const order = stagesEl.map(st => st.dataset.scene);
   const runs = stagesEl.map(st => scenes[st.dataset.scene](st));
-  $("#dots").innerHTML = order.map((n, i) => `<button role="tab" aria-label="${META[n].title}" title="${META[n].title}" data-i="${i}"><i></i></button>`).join("");
+  $("#dots").innerHTML = order.map((n, i) => `<button aria-label="דוגמה ${i + 1}: ${META[n].title}" title="${META[n].title}" data-i="${i}"><i></i></button>`).join("");
   const dots = $$("#dots button");
   let cur = 0, t = 0, playing = false, started = false, lastT = 0;
   function layout() {
@@ -1015,7 +1046,7 @@ const player = (() => {
       sl.classList.toggle("far", Math.abs(o) > 1);
       sl.setAttribute("aria-hidden", o !== 0);
     });
-    dots.forEach((d, i) => { d.setAttribute("aria-selected", i === cur); d.style.setProperty("--p", 0); });
+    dots.forEach((d, i) => { d.setAttribute("aria-current", i === cur ? "true" : "false"); d.style.setProperty("--p", 0); });
   }
   function select(i, autoplay) {
     cur = (i + order.length) % order.length; t = 0;
@@ -1066,9 +1097,9 @@ const player = (() => {
   });
   dots.forEach((d, i) => d.addEventListener("click", () => select(i, false)));
   slides.forEach((sl, i) => sl.addEventListener("click", () => { if (i !== cur) select(i, false); }));
-  car.addEventListener("keydown", e => {
-    if (e.key === "ArrowLeft") { select(cur + 1, false); e.preventDefault(); }       // RTL: left is forward
-    if (e.key === "ArrowRight") { select(cur - 1, false); e.preventDefault(); }
+  $("#dots").addEventListener("keydown", e => {
+    if (e.key === "ArrowLeft") { select(cur + 1, false); dots[cur].focus(); e.preventDefault(); }       // RTL: left is forward
+    if (e.key === "ArrowRight") { select(cur - 1, false); dots[cur].focus(); e.preventDefault(); }
   });
   let wasPlaying = false;
   new IntersectionObserver(([e]) => {
@@ -1079,7 +1110,6 @@ const player = (() => {
   requestAnimationFrame(loop);
   return { select, seek(p) { t = p * DUR; runs[cur](p, performance.now()); draw(); } };
 })();
-window.__goto = (name, p) => { const i = $$("#car .stage").findIndex(s => s.dataset.scene === name); player.select(i, false); $("#playov").classList.add("hide"); player.seek(p); };
 
 /* ---------- capabilities ---------- */
 (() => {
@@ -1101,7 +1131,7 @@ window.__goto = (name, p) => { const i = $$("#car .stage").findIndex(s => s.data
     ["eye", "מסביר מה רואים", "שואלים על מה שעל המסך, והוא רואה את אותו מסך. הודעת שגיאה, גרף, הגדרה שלא ברור מה היא עושה.", "מה אומרת השגיאה הזאת?"],
     ["files", "מסדר קבצים", "ממיין תיקיות, משנה שמות בכמויות, ממיר פורמטים ומסכם מסמכים ארוכים. לא מוחק בלי לשאול.", "תשנה את שמות התמונות לפי תאריך"],
     ["shelf", "מדף קבצים", "עד עשרה קבצים מחכים אצלו בשורת התפריטים. גוררים אותם החוצה כשצריך, והוא יכול לצרף אותם למייל או להעלות לאתר.", "תצרף את הקובץ מהמדף למייל"],
-    ["cal", "יומן, מייל ו-Drive", "דרך החיבורים של חשבון Claude שלך: קובע פגישות, מוצא מיילים, קורא ומסכם קבצים בדרייב.", "מה יש לי מחר בבוקר?"],
+    ["cal", "יומן, מייל ו-Drive", "אם חיברתם אותם לחשבון Claude: קובע פגישות, מוצא מיילים, קורא ומסכם קבצים בדרייב.", "מה יש לי מחר בבוקר?"],
     ["code", "ממשיך פרויקטים בקוד", "נכנס לשיחה הקיימת של פרויקט ב-Claude Code וממשיך משם. ההתקדמות נשמרת באפליקציית Claude.", "תמשיך בבוט ותוסיף כפתור הורדה"],
     ["web", "מחפש ומסכם ברשת", "בודק מחירים, קורא כתבות ומשווה אפשרויות, ומחזיר תשובה קצרה בבועה.", "כמה עולה טיסה לאתונה בפסח?"],
   ];
@@ -1123,7 +1153,7 @@ window.__goto = (name, p) => { const i = $$("#car .stage").findIndex(s => s.data
 
 /* ---------- the Claudy that rides next to your mouse (drawn like the real app) ---------- */
 (() => {
-  const b = $("#buddy"); if (!b || matchMedia("(hover: none)").matches) return;
+  const b = $("#buddy"); if (!b || matchMedia("(hover: none)").matches || reduced) { if (b) b.hidden = true; return; }
   const sayEl = $(".say", b), body = $("#bBody"), props = $("#bProps"), mouth = $("#bMouth");
   const pupils = $$(".pu", b), his = $$(".hi", b), lids = $$(".lid", b), brows = $$(".brow", b);
   const EYES = [41, 79];

@@ -1,0 +1,35 @@
+/* Shared look for the legal pages (privacy, terms, accessibility): plain reading pages in the Claudy palette. */
+:root {
+  --night: #0F0B16; --plum: #1B1426; --mist: #F6F3FA; --mist-2: rgba(246, 243, 250, .78); --mist-3: rgba(246, 243, 250, .62);
+  --line: rgba(246, 243, 250, .14); --ember: #FF7A2B; --ember-hi: #FFB45C; --lilac: #BBA8FF;
+  --f-display: "Fredoka", ui-rounded, "SF Pro Rounded", system-ui, sans-serif;
+  --f-body: "IBM Plex Sans Hebrew", -apple-system, "Segoe UI", system-ui, sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--night); color: var(--mist); font: 17px/1.75 var(--f-body); -webkit-font-smoothing: antialiased; }
+.skip { position: absolute; inset-inline-start: 12px; top: -60px; z-index: 50; background: var(--ember); color: var(--plum); padding: 10px 16px; border-radius: 10px; font-weight: 600; text-decoration: none; }
+.skip:focus { top: 12px; }
+header, main, footer { max-width: 760px; margin: 0 auto; padding-left: max(18px, env(safe-area-inset-left, 0px)); padding-right: max(18px, env(safe-area-inset-right, 0px)); }
+header { padding-block: 22px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--line); }
+header a { display: flex; align-items: center; gap: 10px; color: var(--mist); text-decoration: none; direction: ltr; }
+header svg { width: 28px; height: 28px; }
+header b { font: 600 22px/1 var(--f-display); }
+main { padding-block: 36px 60px; }
+h1 { font: 600 clamp(30px, 5vw, 42px)/1.15 var(--f-display); margin: 0 0 8px; text-wrap: balance; }
+h2 { font: 600 23px/1.3 var(--f-display); margin: 36px 0 8px; }
+p, li { color: var(--mist-2); }
+ul { padding-inline-start: 22px; }
+li { margin: 6px 0; }
+strong { color: var(--mist); }
+a { color: var(--lilac); }
+a:focus-visible { outline: 2px solid var(--ember-hi); outline-offset: 3px; border-radius: 3px; }
+.updated { color: var(--mist-3); font-size: 15px; margin-bottom: 26px; }
+.note { border: 1px solid var(--line); border-radius: 6px 18px 18px 18px; padding: 14px 18px; background: rgba(255, 255, 255, .03); }
+table { width: 100%; border-collapse: collapse; font-size: 15px; }
+th, td { text-align: start; padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--mist-2); }
+th { color: var(--mist); font-weight: 600; }
+.tbl { overflow-x: auto; }
+footer { padding-block: 26px 46px; border-top: 1px solid var(--line); color: var(--mist-3); font-size: 15px; display: flex; flex-wrap: wrap; gap: 8px 18px; }
+footer a { color: var(--mist-2); }
+mark { background: rgba(255, 180, 92, .25); color: var(--mist); padding: 0 4px; border-radius: 4px; }
