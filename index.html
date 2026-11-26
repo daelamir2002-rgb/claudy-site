@@ -1,0 +1,1103 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Claudy</title>
+<meta name="description" content="Claudy יושב בשורת התפריטים, רואה את המסך יחד איתך, מצביע על הכפתור הנכון ועושה משימות. בעברית.">
+<link rel="icon" href="assets/mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=IBM+Plex+Sans+Hebrew:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: one long night sky. A hero with a live desktop, then six sticky stages that play as you scroll,
+   then the faces, the ways in, and the downloads. Claudy himself rides next to the mouse the whole way. */
+:root {
+  --night: #0F0B16;
+  --plum: #1B1426;
+  --plum-2: #261D35;
+  --plum-3: #3A2E4E;
+  --mist: #F6F3FA;
+  --mist-2: rgba(246, 243, 250, .7);
+  --mist-3: rgba(246, 243, 250, .45);
+  --line: rgba(246, 243, 250, .1);
+  --ember: #FF7A2B;
+  --ember-hi: #FFB45C;
+  --ember-lo: #F2501C;
+  --lilac: #BBA8FF;
+  --mint: #7DE3B5;
+  --grad: linear-gradient(135deg, #FFB45C 0%, #FF7A2B 55%, #F2501C 100%);
+  --f-display: "Fredoka", ui-rounded, "SF Pro Rounded", system-ui, sans-serif;
+  --f-body: "IBM Plex Sans Hebrew", -apple-system, "Segoe UI", system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --pad: max(16px, env(safe-area-inset-left, 0px));
+  --pad-r: max(16px, env(safe-area-inset-right, 0px));
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--night); color: var(--mist);
+  font: 17px/1.65 var(--f-body); -webkit-font-smoothing: antialiased; overflow-x: hidden;
+}
+img, svg { max-width: 100%; }
+a { color: inherit; }
+h1, h2, h3 { font-family: var(--f-display); font-weight: 600; text-wrap: balance; margin: 0; letter-spacing: -.01em; }
+p { margin: 0; }
+.wrap { max-width: 1180px; margin: 0 auto; padding-left: var(--pad); padding-right: var(--pad-r); }
+.sky {
+  position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(60vw 40vw at 85% -10%, rgba(255, 122, 43, .16), transparent 70%),
+    radial-gradient(50vw 40vw at 0% 30%, rgba(187, 168, 255, .10), transparent 70%),
+    var(--night);
+}
+.grain { position: fixed; inset: 0; z-index: -1; opacity: .06; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+
+/* nav */
+nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 40; backdrop-filter: blur(14px) saturate(1.3);
+  background: rgba(15, 11, 22, .62); border-bottom: 1px solid var(--line); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 41; background: var(--night); }
+nav .wrap { display: flex; align-items: center; gap: 28px; height: 64px; }
+.logo { display: flex; align-items: center; gap: 10px; text-decoration: none; direction: ltr; }
+.logo svg { width: 30px; height: 30px; }
+.logo b { font: 600 24px/1 var(--f-display); letter-spacing: -.02em; }
+nav .links { display: flex; gap: 22px; margin-inline-start: auto; font-size: 15px; color: var(--mist-2); }
+nav .links a { text-decoration: none; transition: color .15s; }
+nav .links a:hover { color: var(--mist); }
+.btn {
+  display: inline-flex; align-items: center; gap: 10px; height: 48px; padding: 0 22px; border: 0; cursor: pointer;
+  font: 600 16px/1 var(--f-body); text-decoration: none; color: var(--plum);
+  background: var(--grad); border-radius: 6px 22px 22px 22px;
+  box-shadow: 0 10px 34px -10px rgba(255, 122, 43, .75), inset 0 1px 0 rgba(255, 255, 255, .35);
+  transition: transform .2s cubic-bezier(.3, 1.6, .5, 1), box-shadow .2s;
+}
+.btn:hover { transform: translateY(-2px); box-shadow: 0 16px 40px -10px rgba(255, 122, 43, .9), inset 0 1px 0 rgba(255, 255, 255, .35); }
+.btn.ghost { background: rgba(255, 255, 255, .06); color: var(--mist); box-shadow: inset 0 0 0 1px var(--line); }
+.btn.sm { height: 38px; padding: 0 16px; font-size: 14px; }
+.btn:focus-visible, a:focus-visible { outline: 2px solid var(--ember-hi); outline-offset: 3px; }
+nav .btn { margin-inline-start: 4px; }
+
+/* hero */
+.hero { padding-block: 72px 40px; }
+.hero .wrap { display: grid; grid-template-columns: 1fr 1.15fr; gap: 56px; align-items: center; }
+.eyebrow { font: 500 13px/1 var(--f-mono); letter-spacing: .08em; color: var(--ember-hi); text-transform: uppercase; display: inline-flex; gap: 10px; align-items: center; }
+.eyebrow::before { content: ""; width: 7px; height: 7px; border-radius: 1px 7px 7px 7px; background: var(--grad); }
+.hero h1 { font-size: clamp(44px, 6.4vw, 84px); line-height: 1.02; margin: 18px 0 22px; }
+.hero h1 em { font-style: normal; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hero .lead { font-size: clamp(17px, 1.5vw, 19.5px); color: var(--mist-2); max-width: 34em; }
+.hero .cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+.hero .fine { margin-top: 16px; font-size: 13.5px; color: var(--mist-3); }
+
+/* a fake Mac screen */
+.screen {
+  position: relative; aspect-ratio: 16 / 10.4; width: 100%; max-width: 100%; border-radius: 16px; overflow: hidden;
+  background: linear-gradient(160deg, #3B2A52 0%, #20172E 45%, #120D1B 100%);
+  box-shadow: 0 50px 120px -40px rgba(0, 0, 0, .9), 0 0 0 1px rgba(255, 255, 255, .08), inset 0 1px 0 rgba(255, 255, 255, .06);
+  font-size: clamp(9px, 1.05vw, 13px); direction: rtl;
+}
+.screen::before { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(70% 60% at 30% 100%, rgba(255, 122, 43, .25), transparent 70%); }
+.menubar { position: absolute; inset: 0 0 auto; height: 6.2%; display: flex; align-items: center; gap: 1.6em; padding: 0 1.4em;
+  background: rgba(20, 14, 30, .55); backdrop-filter: blur(8px); color: var(--mist-2); font-size: .95em; z-index: 3; }
+.menubar .face { margin-inline-end: auto; }
+.menubar .clock { font-variant-numeric: tabular-nums; }
+.win { position: absolute; border-radius: .9em; background: rgba(30, 23, 42, .92); box-shadow: 0 1.6em 3em -1em rgba(0, 0, 0, .6), 0 0 0 1px rgba(255, 255, 255, .07); overflow: hidden; }
+.win .bar { height: 2.2em; display: flex; align-items: center; gap: .45em; padding: 0 .9em; border-bottom: 1px solid rgba(255, 255, 255, .06); direction: ltr; }
+.win .bar i { width: .75em; height: .75em; border-radius: 50%; background: #FF5F57; }
+.win .bar i:nth-child(2) { background: #FEBC2E; } .win .bar i:nth-child(3) { background: #28C840; }
+.win .bar span { margin-inline-start: auto; margin-inline-end: auto; color: var(--mist-3); font-size: .9em; direction: rtl; }
+
+/* Claudy as drawn in scenes */
+.cl { position: absolute; width: 4.8em; height: 3.2em; z-index: 6; transition: left .6s cubic-bezier(.4, 1.4, .5, 1), top .6s cubic-bezier(.4, 1.4, .5, 1); }
+.cl svg { width: 100%; height: 100%; overflow: visible; filter: drop-shadow(0 .4em .9em rgba(0, 0, 0, .55)) drop-shadow(0 0 .8em rgba(255, 120, 20, .25)); }
+.bubble {
+  position: absolute; z-index: 7; max-width: 17em; padding: .65em 1em; font-size: 1.02em; line-height: 1.45;
+  background: rgba(27, 20, 38, .94); color: var(--mist); border: 1px solid rgba(255, 122, 43, .55);
+  border-radius: .35em 1.1em 1.1em 1.1em; box-shadow: 0 1em 2em -1em rgba(0, 0, 0, .7);
+  transition: opacity .3s, transform .3s; white-space: normal;
+}
+.bubble.off { opacity: 0; transform: translateY(.4em); }
+.arrow { position: absolute; width: 2.1em; height: 2.6em; z-index: 8; transition: left .7s cubic-bezier(.5, 0, .2, 1), top .7s cubic-bezier(.5, 0, .2, 1), opacity .3s; filter: drop-shadow(0 .3em .5em rgba(0, 0, 0, .5)); }
+.ring { position: absolute; z-index: 5; border: .2em solid var(--ember); border-radius: .7em; box-shadow: 0 0 0 .5em rgba(255, 122, 43, .18), 0 0 2em rgba(255, 122, 43, .5);
+  transition: all .7s cubic-bezier(.5, 0, .2, 1); pointer-events: none; }
+
+/* hero scene */
+#heroScene .win.notes { left: 7%; top: 16%; width: 52%; height: 62%; }
+.notes .side { position: absolute; inset: 2.2em auto 0 0; width: 34%; border-inline-end: 1px solid rgba(255, 255, 255, .06); padding: .8em; display: grid; gap: .5em; align-content: start; }
+.notes .side b { display: block; height: 2.6em; border-radius: .5em; background: rgba(255, 255, 255, .05); }
+.notes .side b:first-child { background: rgba(255, 122, 43, .18); }
+.notes .page { position: absolute; inset: 2.2em 0 0 34%; padding: 1.2em; display: grid; gap: .7em; align-content: start; }
+.notes .page s { display: block; height: .7em; border-radius: .4em; background: rgba(255, 255, 255, .09); text-decoration: none; }
+.notes .tool { position: absolute; top: 2.9em; left: 1em; display: flex; gap: .4em; direction: ltr; }
+.notes .tool u { width: 1.9em; height: 1.9em; border-radius: .5em; background: rgba(255, 255, 255, .07); display: grid; place-items: center; text-decoration: none; color: var(--mist-2); font-size: .9em; font-weight: 600; }
+
+/* demos */
+.section-head { padding-block: 110px 30px; display: grid; gap: 14px; max-width: 760px; }
+.section-head h2 { font-size: clamp(34px, 4.4vw, 58px); line-height: 1.06; }
+.section-head p { color: var(--mist-2); font-size: 18px; max-width: 40em; }
+.demo { position: relative; height: 260vh; }
+.demo .pin { position: sticky; top: calc(64px + env(safe-area-inset-top, 0px)); height: calc(100vh - 64px); display: flex; align-items: center; }
+.demo .pin .wrap { width: 100%; display: grid; grid-template-columns: .82fr 1.18fr; gap: 56px; align-items: center; }
+.demo .copy { display: grid; gap: 16px; align-content: center; }
+.demo .copy .kicker { font: 500 13px/1 var(--f-mono); color: var(--ember-hi); letter-spacing: .06em; }
+.demo .copy h3 { font-size: clamp(30px, 3.4vw, 46px); line-height: 1.08; }
+.demo .copy p { color: var(--mist-2); font-size: 18px; max-width: 30em; }
+.demo .ask { align-self: start; display: inline-flex; gap: 10px; align-items: center; padding: 10px 16px; border-radius: 4px 16px 16px 16px;
+  background: rgba(187, 168, 255, .12); border: 1px solid rgba(187, 168, 255, .25); color: var(--mist); font-size: 15.5px; width: fit-content; max-width: 100%; }
+.demo .ask svg { flex: none; width: 16px; height: 16px; color: var(--lilac); }
+.progress { height: 3px; border-radius: 3px; background: var(--line); overflow: hidden; max-width: 240px; }
+.progress i { display: block; height: 100%; width: calc(var(--p, 0) * 100%); background: var(--grad); }
+
+/* desktop cleanup */
+.file { position: absolute; width: 5.4em; display: grid; justify-items: center; gap: .25em; font-size: .82em; color: var(--mist); text-align: center; z-index: 2; will-change: transform; }
+.file .ic { width: 3.1em; height: 3.7em; border-radius: .35em .9em .35em .35em; background: #E9E4F1; position: relative; box-shadow: 0 .4em .8em -.3em rgba(0, 0, 0, .5); }
+.file .ic::after { content: attr(data-ext); position: absolute; bottom: .45em; inset-inline: 0; font: 700 .72em/1 var(--f-mono); color: #fff; padding: .2em 0; }
+.file .ic[data-k="img"] { background: linear-gradient(160deg, #8BD3FF, #5B7CFA); }
+.file .ic[data-k="doc"] { background: linear-gradient(160deg, #F4F1F8, #C9C0D8); } .file .ic[data-k="doc"]::after { color: #4A3D63; }
+.file .ic[data-k="pdf"] { background: linear-gradient(160deg, #FF9C8A, #E5484D); }
+.file .ic[data-k="vid"] { background: linear-gradient(160deg, #C4A6FF, #7C5CFF); }
+.file span { text-shadow: 0 1px 3px rgba(0, 0, 0, .8); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.folder { position: absolute; width: 6.4em; display: grid; justify-items: center; gap: .3em; font-size: .88em; z-index: 1; transform-origin: 50% 80%; }
+.folder .fi { width: 4.6em; height: 3.5em; position: relative; }
+.folder .fi::before { content: ""; position: absolute; inset: 0 0 auto 0; width: 45%; height: 30%; border-radius: .4em .4em 0 0; background: #5AA7F2; }
+.folder .fi::after { content: ""; position: absolute; inset: 20% 0 0; border-radius: .25em .5em .5em .5em; background: linear-gradient(180deg, #7CC0FF, #4C95E8); box-shadow: 0 .4em .9em -.3em rgba(0, 0, 0, .5); }
+.folder b { font-weight: 500; text-shadow: 0 1px 3px rgba(0, 0, 0, .8); }
+.folder em { position: absolute; top: -.4em; left: .2em; min-width: 1.6em; height: 1.6em; padding: 0 .35em; border-radius: 1em; background: var(--ember); color: var(--plum); font: 700 .8em/1.6em var(--f-body); font-style: normal; text-align: center; z-index: 2; }
+
+/* editor tutorial */
+.ed { position: absolute; inset: 9% 4% 5% 4%; display: grid; grid-template-rows: 2.2em 2.6em 1fr 32%; }
+.ed .tools { display: flex; gap: .4em; padding: .3em .8em; align-items: center; direction: ltr; border-bottom: 1px solid rgba(255, 255, 255, .06); }
+.ed .tools u { height: 1.9em; padding: 0 .7em; border-radius: .45em; background: rgba(255, 255, 255, .06); display: grid; place-items: center; text-decoration: none; color: var(--mist-2); font-size: .85em; }
+.ed .tools u.exp { margin-left: auto; background: rgba(255, 122, 43, .2); color: var(--ember-hi); }
+.ed .viewer { display: grid; place-items: center; }
+.ed .viewer div { width: 58%; aspect-ratio: 16 / 9; border-radius: .4em; background: linear-gradient(135deg, #2D6D7A, #E08A4C 60%, #3B2A52); position: relative; overflow: hidden; }
+.ed .viewer div::after { content: ""; position: absolute; width: 22%; aspect-ratio: 1; border-radius: 50%; background: #FFD27A; top: 18%; right: 20%; box-shadow: 0 0 2em #FFD27A; }
+.ed .tl { border-top: 1px solid rgba(255, 255, 255, .06); position: relative; padding: .7em .8em; display: grid; gap: .4em; direction: ltr; }
+.ed .track { display: flex; gap: .25em; height: 1.9em; }
+.ed .track b { border-radius: .35em; background: linear-gradient(180deg, #8C76E8, #6A55C9); }
+.ed .track.a b { background: linear-gradient(180deg, #3CBF94, #26876A); height: 1.4em; align-self: end; }
+.ed .head { position: absolute; top: .3em; bottom: .3em; left: 41%; width: 2px; background: var(--ember-hi); box-shadow: 0 0 .6em var(--ember); }
+.ed .head::before { content: ""; position: absolute; top: -.2em; left: -.35em; width: .8em; height: .6em; background: var(--ember-hi); border-radius: .15em; }
+.steps { position: absolute; bottom: 3%; right: 3%; display: flex; gap: .35em; z-index: 9; }
+.steps i { width: .55em; height: .55em; border-radius: 50%; background: rgba(255, 255, 255, .2); transition: background .3s, width .3s; }
+.steps i.on { background: var(--ember); width: 1.6em; border-radius: .3em; }
+
+/* dictation */
+.chat { position: absolute; inset: 11% 8% 24% 8%; display: grid; grid-template-rows: 2.2em 1fr auto; }
+.chat .log { padding: 1em 1.2em; display: grid; gap: .6em; align-content: end; }
+.chat .log p { max-width: 70%; padding: .5em .9em; border-radius: 1em 1em 1em .3em; background: rgba(255, 255, 255, .07); justify-self: end; font-size: .95em; }
+.chat .log p.me { justify-self: start; background: #2C6BE8; border-radius: 1em 1em .3em 1em; }
+.chat .field { margin: .8em; padding: .7em 1em; min-height: 2.8em; border-radius: 1.4em; background: rgba(255, 255, 255, .06); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .1); display: flex; align-items: center; gap: .3em; flex-wrap: wrap; }
+.chat .field.live { box-shadow: inset 0 0 0 2px rgba(255, 122, 43, .7), 0 0 1.4em rgba(255, 122, 43, .25); }
+.chat .caret { display: inline-block; width: 2px; height: 1.2em; background: var(--ember-hi); animation: blink 1s steps(2) infinite; vertical-align: middle; }
+@keyframes blink { 50% { opacity: 0; } }
+.chat .raw { color: var(--mist-3); }
+.key { position: absolute; z-index: 9; display: grid; place-items: center; min-width: 3.4em; height: 3.4em; padding: 0 .8em; border-radius: .6em;
+  background: linear-gradient(180deg, #3A2E4E, #261D35); box-shadow: 0 .35em 0 #120D1B, inset 0 1px 0 rgba(255, 255, 255, .15); font: 600 1.05em/1 var(--f-mono); color: var(--mist); transition: transform .12s, box-shadow .12s, background .2s; direction: ltr; }
+.key.down { transform: translateY(.3em); box-shadow: 0 .05em 0 #120D1B, 0 0 1.6em rgba(255, 122, 43, .6); background: linear-gradient(180deg, #FF8A3D, #F2501C); color: var(--plum); }
+.key small { display: block; font-size: .55em; font-weight: 500; opacity: .7; margin-top: .2em; }
+.wave { position: absolute; z-index: 9; display: flex; gap: .22em; align-items: center; height: 2.6em; }
+.wave i { width: .28em; border-radius: .2em; background: var(--ember-hi); height: 20%; transition: height .12s; }
+
+/* shelf */
+.shelf-bar { position: absolute; top: 0; left: 0; right: 0; height: 6.2%; z-index: 4; }
+.strip { position: absolute; top: 7.4%; z-index: 5; height: 7.2em; border-radius: 1.6em .4em 1.6em 1.6em; background: rgba(27, 20, 38, .95); border: 1px solid rgba(255, 122, 43, .6);
+  box-shadow: 0 1.4em 3em -1em rgba(0, 0, 0, .8); display: flex; align-items: center; gap: .7em; padding: 0 .9em; overflow: hidden; direction: rtl; }
+.strip .tile { flex: none; width: 5.3em; height: 5.6em; border-radius: .7em; background: rgba(255, 255, 255, .05); display: grid; justify-items: center; align-content: center; gap: .35em; font-size: .78em; color: var(--mist-2); }
+.strip .tile .ic { width: 2.4em; height: 2.9em; }
+.drop { position: absolute; z-index: 2; border: .15em dashed rgba(255, 255, 255, .25); border-radius: .9em; display: grid; place-items: center; text-align: center; color: var(--mist-3); transition: all .3s; padding: 1em; }
+.drop.ok { border-color: var(--mint); color: var(--mint); background: rgba(125, 227, 181, .08); border-style: solid; }
+.badge { position: absolute; top: -.35em; left: -.45em; min-width: 1.4em; height: 1.4em; border-radius: 1em; background: var(--ember); color: var(--plum); font: 700 .75em/1.4em var(--f-body); text-align: center; z-index: 2; transition: transform .25s cubic-bezier(.3, 1.8, .5, 1); }
+
+/* hands */
+.msgr { position: absolute; inset: 11% 6% 6% 6%; display: grid; grid-template-columns: 34% 1fr; grid-template-rows: 2.2em 1fr; }
+.msgr .bar { grid-column: 1 / -1; }
+.msgr .contacts { border-inline-end: 1px solid rgba(255, 255, 255, .06); padding: .6em; display: grid; gap: .3em; align-content: start; }
+.msgr .search { height: 2.2em; border-radius: .6em; background: rgba(255, 255, 255, .06); display: flex; align-items: center; padding: 0 .8em; color: var(--mist-3); font-size: .9em; margin-bottom: .4em; transition: box-shadow .3s; }
+.msgr .search.on { box-shadow: inset 0 0 0 2px var(--ember); color: var(--mist); }
+.msgr .c { display: flex; gap: .6em; align-items: center; padding: .45em .5em; border-radius: .6em; font-size: .92em; transition: background .3s; }
+.msgr .c.on { background: rgba(44, 107, 232, .35); }
+.msgr .c i { width: 2.1em; height: 2.1em; border-radius: 50%; flex: none; background: linear-gradient(135deg, #F3B4C9, #B66AD9); }
+.msgr .c:nth-child(3) i { background: linear-gradient(135deg, #9FD6FF, #4C7DF0); } .msgr .c:nth-child(4) i { background: linear-gradient(135deg, #B8F0C9, #3BAA77); }
+.msgr .c:nth-child(5) i { background: linear-gradient(135deg, #FFD9A0, #E58B2E); }
+.msgr .c small { display: block; color: var(--mist-3); font-size: .85em; }
+.msgr .conv { display: grid; grid-template-rows: 1fr auto; }
+.msgr .conv .log { padding: 1em; display: grid; gap: .5em; align-content: end; }
+.msgr .conv .log p { max-width: 70%; padding: .5em .9em; border-radius: 1em 1em 1em .3em; background: rgba(255, 255, 255, .07); justify-self: end; font-size: .95em; }
+.msgr .conv .log p.me { justify-self: start; background: #2C6BE8; border-radius: 1em 1em .3em 1em; }
+.msgr .conv .field { margin: .7em; height: 2.6em; border-radius: 1.3em; background: rgba(255, 255, 255, .06); display: flex; align-items: center; padding: 0 1em; font-size: .95em; }
+.check { position: absolute; z-index: 9; width: 4em; height: 4em; opacity: 0; transform: scale(.6); transition: all .35s cubic-bezier(.3, 1.8, .5, 1); }
+.check.on { opacity: 1; transform: scale(1); }
+
+/* projects */
+.term { position: absolute; inset: 12% 6% 7% 34%; font-family: var(--f-mono); font-size: .88em; direction: ltr; text-align: left; }
+.term .body { padding: 1em 1.2em; display: grid; gap: .55em; }
+.term .ln { opacity: .0; transform: translateY(.3em); transition: all .35s; color: var(--mist-2); display: flex; gap: .7em; }
+.term .ln.on { opacity: 1; transform: none; }
+.term .ln b { color: var(--ember-hi); font-weight: 500; } .term .ln .ok { color: var(--mint); }
+.plist { position: absolute; inset: 12% 68% 7% 4%; padding: .8em; display: grid; gap: .45em; align-content: start; }
+.plist div { padding: .55em .7em; border-radius: .6em; background: rgba(255, 255, 255, .04); font-size: .88em; color: var(--mist-2); transition: all .4s; }
+.plist div.on { background: rgba(255, 122, 43, .16); color: var(--mist); box-shadow: inset 0 0 0 1px rgba(255, 122, 43, .5); }
+.plist small { display: block; color: var(--mist-3); font-size: .85em; }
+
+/* examples player: tabs on top, the screen plays, the beats on the side light up in step */
+.tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+.tab { all: unset; cursor: pointer; position: relative; overflow: hidden; padding: 10px 16px 12px; border-radius: 6px 18px 18px 18px;
+  background: rgba(255, 255, 255, .04); box-shadow: inset 0 0 0 1px var(--line); color: var(--mist-2); font-size: 15px; font-weight: 500; transition: background .2s, color .2s; }
+.tab:hover { color: var(--mist); background: rgba(255, 255, 255, .07); }
+.tab[aria-selected="true"] { color: var(--mist); background: rgba(255, 120, 20, .12); box-shadow: inset 0 0 0 1px rgba(255, 122, 43, .5); }
+.tab i { position: absolute; inset: auto 0 0 auto; height: 3px; width: calc(var(--p, 0) * 100%); background: var(--grad); }
+.tab:focus-visible { outline: 2px solid var(--ember-hi); outline-offset: 2px; }
+.player { display: grid; grid-template-columns: 1.35fr .85fr; gap: 40px; align-items: start; }
+.stagebox { position: relative; min-width: 0; }
+.stagebox .stage { display: none; }
+.stagebox .stage.on { display: block; }
+.playov { all: unset; position: absolute; inset: 0 0 44px 0; border-radius: 16px; cursor: pointer; z-index: 20; display: grid; place-content: center; justify-items: center; gap: 18px;
+  background: radial-gradient(60% 60% at 50% 50%, rgba(15, 11, 22, .55), rgba(15, 11, 22, .82)); backdrop-filter: blur(3px); transition: opacity .35s; text-align: center; padding: 20px; }
+.playov.hide { opacity: 0; pointer-events: none; }
+.playov .sit { max-width: 26em; font-size: clamp(15px, 1.6vw, 19px); color: var(--mist); line-height: 1.5; text-wrap: balance; }
+.pbtn { width: 78px; height: 78px; border-radius: 50%; display: grid; place-items: center; color: var(--plum); background: var(--grad);
+  box-shadow: 0 16px 40px -10px rgba(255, 122, 43, .9), 0 0 0 10px rgba(255, 122, 43, .14); transition: transform .25s cubic-bezier(.3, 1.6, .5, 1); }
+.pbtn svg { margin-right: -4px; }
+.playov:hover .pbtn { transform: scale(1.08); }
+.playov:focus-visible .pbtn { outline: 3px solid var(--mist); outline-offset: 4px; }
+.pbar { display: flex; align-items: center; gap: 12px; margin-top: 12px; direction: ltr; }
+.pbar button { all: unset; cursor: pointer; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: rgba(255, 255, 255, .07); color: var(--mist); }
+.pbar button:hover { background: rgba(255, 255, 255, .13); }
+.scrub { flex: 1; height: 4px; border-radius: 4px; background: var(--line); overflow: hidden; }
+.scrub i { display: block; height: 100%; width: 0; background: var(--grad); }
+#ptime { font: 500 12.5px var(--f-mono); color: var(--mist-3); font-variant-numeric: tabular-nums; min-width: 3.2em; }
+.explain { display: grid; gap: 14px; align-content: start; padding-top: 6px; min-width: 0; }
+.explain .kicker { font: 500 13px/1 var(--f-mono); color: var(--ember-hi); letter-spacing: .06em; }
+.explain h3 { font-size: clamp(26px, 2.6vw, 36px); line-height: 1.1; }
+.explain .ask { display: inline-flex; gap: 10px; align-items: center; padding: 10px 16px; border-radius: 16px 4px 16px 16px;
+  background: rgba(187, 168, 255, .12); border: 1px solid rgba(187, 168, 255, .25); font-size: 15px; width: fit-content; max-width: 100%; }
+.explain .ask svg { flex: none; width: 16px; height: 16px; color: var(--lilac); }
+.beats { list-style: none; margin: 6px 0 0; padding: 0; display: grid; gap: 4px; counter-reset: b; }
+.beats li { counter-increment: b; display: grid; grid-template-columns: 30px 1fr; gap: 12px; align-items: start; padding: 10px 12px; border-radius: 6px 16px 16px 16px;
+  color: var(--mist-3); transition: color .35s, background .35s; }
+.beats li::before { content: counter(b); width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font: 600 13px/1 var(--f-mono);
+  background: rgba(255, 255, 255, .06); color: var(--mist-3); transition: all .35s; }
+.beats li.done { color: var(--mist-2); }
+.beats li.done::before { background: rgba(125, 227, 181, .16); color: var(--mint); content: "✓"; }
+.beats li.now { color: var(--mist); background: rgba(255, 255, 255, .045); }
+.beats li.now::before { background: var(--grad); color: var(--plum); }
+.explain .next { font-size: 13.5px; color: var(--mist-3); min-height: 1.4em; }
+
+/* capabilities */
+.caps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.cap { padding: 24px; border-radius: 6px 26px 26px 26px; background: linear-gradient(180deg, rgba(38, 29, 53, .6), rgba(27, 20, 38, .35)); box-shadow: inset 0 0 0 1px var(--line);
+  display: grid; gap: 10px; align-content: start; transition: transform .3s cubic-bezier(.3, 1.5, .5, 1), box-shadow .3s; }
+.cap:hover { transform: translateY(-4px); box-shadow: inset 0 0 0 1px rgba(255, 122, 43, .45), 0 20px 40px -22px rgba(255, 122, 43, .5); }
+.cap .ic { width: 44px; height: 44px; border-radius: 4px 14px 14px 14px; display: grid; place-items: center; background: rgba(255, 120, 20, .13); color: var(--ember-hi); }
+.cap .ic svg { width: 22px; height: 22px; }
+.cap h3 { font-size: 21px; }
+.cap p { color: var(--mist-2); font-size: 15.5px; line-height: 1.55; }
+.cap q { quotes: none; font-size: 14px; color: var(--lilac); }
+.reveal { transition: opacity .6s ease, transform .6s cubic-bezier(.2, .8, .2, 1); }
+.reveal.pre { opacity: 0; transform: translateY(24px); }
+@media (max-width: 920px) { .player { grid-template-columns: 1fr; gap: 22px; } .caps { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 560px) { .caps { grid-template-columns: 1fr; } .tab { padding: 8px 12px 10px; font-size: 14px; } }
+
+/* faces */
+.faces { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; padding-bottom: 40px; }
+.facecard { border-radius: 6px 26px 26px 26px; padding: 26px 22px 22px; background: linear-gradient(180deg, rgba(38, 29, 53, .7), rgba(27, 20, 38, .5)); box-shadow: inset 0 0 0 1px var(--line);
+  display: grid; gap: 12px; justify-items: start; transition: transform .3s cubic-bezier(.3, 1.5, .5, 1), box-shadow .3s; }
+.facecard:hover { transform: translateY(-4px); box-shadow: inset 0 0 0 1px rgba(255, 122, 43, .45), 0 20px 40px -20px rgba(255, 122, 43, .4); }
+.facecard svg { width: 92px; height: 92px; overflow: visible; }
+.facecard h3 { font-size: 21px; }
+.facecard p { color: var(--mist-2); font-size: 15px; line-height: 1.55; }
+
+/* ways in */
+.ways { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.way { padding: 26px; border-radius: 6px 26px 26px 26px; background: rgba(255, 255, 255, .03); box-shadow: inset 0 0 0 1px var(--line); display: grid; gap: 12px; align-content: start; }
+.way .keys { display: flex; gap: 8px; direction: ltr; justify-content: flex-end; }
+.way kbd { min-width: 42px; height: 42px; padding: 0 10px; display: grid; place-items: center; border-radius: 9px; font: 600 17px/1 var(--f-mono); color: var(--mist);
+  background: linear-gradient(180deg, #3A2E4E, #261D35); box-shadow: 0 4px 0 #120D1B, inset 0 1px 0 rgba(255, 255, 255, .15); }
+.way h3 { font-size: 22px; }
+.way p { color: var(--mist-2); font-size: 15.5px; }
+
+.privacy { margin-top: 110px; display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: start; padding-block: 48px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.privacy h2 { font-size: clamp(30px, 3.4vw, 44px); line-height: 1.1; }
+.privacy ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 16px; }
+.privacy li { display: grid; grid-template-columns: 22px 1fr; gap: 12px; color: var(--mist-2); }
+.privacy li::before { content: ""; width: 10px; height: 10px; margin-top: 9px; border-radius: 1px 10px 10px 10px; background: var(--grad); }
+.privacy li b { color: var(--mist); font-weight: 600; }
+
+/* download */
+.dl { padding-block: 110px 80px; text-align: center; display: grid; justify-items: center; gap: 18px; }
+.dl .big { width: 132px; height: 132px; filter: drop-shadow(0 20px 50px rgba(255, 122, 43, .45)); animation: float 5s ease-in-out infinite; }
+@keyframes float { 50% { transform: translateY(-10px) rotate(-2deg); } }
+.dl h2 { font-size: clamp(40px, 5.4vw, 72px); line-height: 1.02; }
+.dl > p { color: var(--mist-2); font-size: 18px; max-width: 36em; }
+.platforms { display: grid; grid-template-columns: repeat(2, minmax(0, 340px)); gap: 16px; margin-top: 18px; justify-content: center; width: 100%; }
+.plat { text-align: start; padding: 26px; border-radius: 6px 26px 26px 26px; background: rgba(255, 255, 255, .035); box-shadow: inset 0 0 0 1px var(--line); display: grid; gap: 10px; }
+.plat.main { background: linear-gradient(180deg, rgba(255, 122, 43, .13), rgba(255, 122, 43, .03)); box-shadow: inset 0 0 0 1px rgba(255, 122, 43, .45); }
+.plat h3 { font-size: 26px; display: flex; align-items: center; gap: 10px; }
+.plat h3 svg { width: 24px; height: 24px; }
+.plat .meta { font: 500 13.5px/1.5 var(--f-body); color: var(--mist-3); direction: rtl; }
+.plat .btn { justify-content: center; margin-top: 6px; }
+.plat .soon { font-size: 12px; padding: 2px 9px; border-radius: 99px; background: rgba(187, 168, 255, .15); color: var(--lilac); font-family: var(--f-body); font-weight: 500; }
+.btn[aria-disabled="true"] { pointer-events: none; opacity: .55; }
+.steps-install { margin-top: 22px; display: grid; gap: 6px; color: var(--mist-3); font-size: 14.5px; max-width: 40em; }
+footer { padding-block: 30px 50px; color: var(--mist-3); font-size: 14px; border-top: 1px solid var(--line); }
+footer .wrap { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+footer .logo svg { width: 22px; height: 22px; } footer .logo b { font-size: 18px; }
+
+/* the Claudy that follows the mouse */
+#buddy { position: fixed; left: 0; top: 0; z-index: 100; pointer-events: none; width: 66px; height: 44px; will-change: transform; transition: opacity .3s; }
+#buddy svg { width: 100%; height: 100%; overflow: visible; filter: drop-shadow(0 6px 12px rgba(0, 0, 0, .6)) drop-shadow(0 0 10px rgba(255, 120, 20, .25)); }
+#buddy .say { position: absolute; top: 2px; right: 74px; white-space: nowrap; padding: 7px 13px; font-size: 14px; border-radius: 14px 4px 14px 14px;
+  background: rgba(27, 20, 38, .95); border: 1px solid rgba(255, 122, 43, .55); color: var(--mist); box-shadow: 0 10px 24px -8px rgba(0, 0, 0, .7);
+  opacity: 0; transform: translateX(6px) scale(.96); transform-origin: right top; transition: opacity .25s, transform .25s; }
+#buddy .say.on { opacity: 1; transform: none; }
+#buddy .zz { position: absolute; top: -14px; left: -6px; font: 600 14px var(--f-display); color: var(--lilac); opacity: 0; transition: opacity .4s; }
+#buddy.sleep .zz { opacity: 1; animation: zz 2.4s ease-in-out infinite; }
+@keyframes zz { 50% { transform: translate(-4px, -6px); } }
+@media (hover: none) { #buddy { display: none; } }
+
+@media (max-width: 920px) {
+  .hero .wrap, .demo .pin .wrap, .privacy { grid-template-columns: 1fr; gap: 28px; }
+  .hero { padding-block: 40px 20px; }
+  .demo { height: 230vh; }
+  .demo .pin .wrap { gap: 18px; }
+  .demo .copy p { font-size: 16px; }
+  .demo .copy h3 { font-size: 28px; }
+  .faces { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ways { grid-template-columns: 1fr; }
+  nav .links { display: none; }
+  nav .btn { margin-inline-start: auto; }
+}
+@media (max-width: 560px) {
+  .platforms { grid-template-columns: 1fr; }
+  .demo .copy p { display: none; }
+  .faces { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .facecard { padding: 18px 14px; } .facecard svg { width: 64px; height: 64px; } .facecard p { font-size: 13.5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .dl .big, #buddy .zz { animation: none; }
+  .cl, .arrow, .ring { transition: none; }
+}
+</style>
+</head>
+<body>
+<div class="sky" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="em" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFB45C"/><stop offset=".55" stop-color="#FF7A2B"/><stop offset="1" stop-color="#F2501C"/></linearGradient>
+    <path id="shape" d="M14 17 Q14 14 17 14 L72 14 A34 34 0 0 1 106 48 L106 72 A34 34 0 0 1 72 106 L48 106 A34 34 0 0 1 14 72 Z"/>
+    <symbol id="mark" viewBox="0 0 120 120">
+      <use href="#shape" fill="url(#em)"/>
+      <rect x="37" y="44" width="14" height="21" rx="7" fill="#1B1426"/><rect x="63" y="44" width="14" height="21" rx="7" fill="#1B1426"/>
+      <circle cx="42" cy="49.5" r="2.6" fill="#FFF6EE"/><circle cx="68" cy="49.5" r="2.6" fill="#FFF6EE"/>
+    </symbol>
+    <symbol id="claudy" viewBox="0 0 120 80">
+      <rect x="10" y="10" width="100" height="60" rx="26" fill="#1F1B19" stroke="#FF7814" stroke-width="3.5"/>
+      <ellipse cx="41" cy="40" rx="13.5" ry="16" fill="#fff"/><ellipse cx="79" cy="40" rx="13.5" ry="16" fill="#fff"/>
+      <circle cx="44" cy="41" r="6.8" fill="#121212"/><circle cx="82" cy="41" r="6.8" fill="#121212"/>
+      <circle cx="46" cy="38.5" r="1.9" fill="#fff"/><circle cx="84" cy="38.5" r="1.9" fill="#fff"/>
+    </symbol>
+    <symbol id="arrow" viewBox="0 0 24 30"><path d="M2 2 L2 24 L8 18.5 L12.2 27.5 L16 25.8 L11.9 17 L20 17 Z" fill="url(#em)" stroke="#FFF6EE" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+    <symbol id="apple" viewBox="0 0 24 24"><path fill="currentColor" d="M16.4 12.6c0-2.6 2.1-3.8 2.2-3.9-1.2-1.8-3.1-2-3.7-2-1.6-.2-3.1.9-3.9.9-.8 0-2-.9-3.4-.9-1.7 0-3.3 1-4.2 2.6-1.8 3.1-.5 7.7 1.3 10.2.9 1.2 1.9 2.6 3.2 2.6 1.3-.1 1.8-.8 3.3-.8 1.6 0 2 .8 3.4.8 1.4 0 2.3-1.3 3.1-2.5 1-1.4 1.4-2.8 1.4-2.9 0 0-2.7-1-2.7-4.1zM13.9 5c.7-.9 1.2-2 1-3.2-1 0-2.3.7-3 1.6-.7.8-1.3 2-1.1 3.1 1.2.1 2.3-.6 3.1-1.5z"/></symbol>
+    <symbol id="win" viewBox="0 0 24 24"><path fill="currentColor" d="M3 5.2 10.4 4v7.3H3zm8.3-1.3L21 2.5v8.8h-9.7zM3 12.6h7.4V20L3 18.8zm8.3 0H21v8.9l-9.7-1.4z"/></symbol>
+    <symbol id="mic" viewBox="0 0 16 16"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" d="M8 1.8a2.2 2.2 0 0 0-2.2 2.2v3.6a2.2 2.2 0 0 0 4.4 0V4A2.2 2.2 0 0 0 8 1.8zM3.6 7.4a4.4 4.4 0 0 0 8.8 0M8 11.8v2.4"/></symbol>
+  </defs>
+</svg>
+
+<nav aria-label="ראשי">
+  <div class="wrap">
+    <a class="logo" href="#top" aria-label="Claudy"><svg><use href="#mark"/></svg><b>claudy</b></a>
+    <div class="links"><a href="#demos">דוגמאות</a><a href="#can">יכולות</a><a href="#privacy">פרטיות</a></div>
+    <a class="btn sm" href="#download" data-say="אני כאן למטה">הורדה</a>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <div>
+      <span class="eyebrow">ל-Mac, ובקרוב ל-Windows</span>
+      <h1>עוזר שיושב לך <em>על המסך</em></h1>
+      <p class="lead">Claudy רואה את המסך יחד איתך. שואלים אותו איך עושים משהו, והוא מצביע על הכפתור הנכון. מבקשים שיעשה את זה, והוא עושה. בעברית, בקול או בכתב.</p>
+      <div class="cta">
+        <a class="btn" href="#download" data-say="בוא נתקין אותי"><svg width="18" height="18"><use href="#apple"/></svg>הורדה ל-Mac</a>
+        <a class="btn ghost" href="#demos" data-say="גוללים, ואני מראה">ככה זה נראה</a>
+      </div>
+      <p class="fine">עובד עם חשבון Claude שכבר יש לך. בלי מפתחות, בלי הגדרות.</p>
+    </div>
+    <div class="screen" id="heroScene" data-say="זה אני, בגרסה הקטנה" aria-label="הדגמה: Claudy מצביע על כפתור ההדגשה בתוכנת פתקים">
+      <div class="menubar"><span>Notes</span><span>File</span><span>Edit</span><span class="face"></span><span class="clock">09:41</span></div>
+      <div class="win notes">
+        <div class="bar"><i></i><i></i><i></i><span>סיכום פגישה</span></div>
+        <div class="side"><b></b><b></b><b></b><b></b></div>
+        <div class="tool"><u>B</u><u data-t="hl" style="color:#FFD27A">H</u><u>≡</u><u>☐</u></div>
+        <div class="page"><s style="width:62%"></s><s></s><s style="width:88%"></s><s style="width:74%; background:rgba(255,210,122,.35)"></s><s style="width:80%"></s><s style="width:46%"></s></div>
+      </div>
+      <div class="ring" id="hRing"></div>
+      <svg class="arrow" id="hArrow"><use href="#arrow"/></svg>
+      <div class="cl" id="hCl"><svg viewBox="0 0 120 80"><use href="#claudy"/></svg></div>
+      <div class="bubble" id="hBub">מסמנים את השורה, ואז לוחצים כאן. זה מדגיש בצהוב.</div>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="wrap" id="demos">
+  <div class="section-head">
+    <span class="eyebrow">דוגמאות</span>
+    <h2>ככה זה נראה ביום רגיל</h2>
+    <p>שש בקשות אמיתיות. בוחרים כרטיסייה, לוחצים על פליי, ומשמאל רואים מה Claudy עושה בכל רגע.</p>
+  </div>
+  <div class="tabs" role="tablist" aria-label="דוגמאות"><button class="tab" role="tab" data-i="0" aria-selected="false"><span>סידור קבצים</span><i></i></button><button class="tab" role="tab" data-i="1" aria-selected="false"><span>הדרכה בתוכנה</span><i></i></button><button class="tab" role="tab" data-i="2" aria-selected="false"><span>הכתבה</span><i></i></button><button class="tab" role="tab" data-i="3" aria-selected="false"><span>המדף</span><i></i></button><button class="tab" role="tab" data-i="4" aria-selected="false"><span>שליחת הודעה</span><i></i></button><button class="tab" role="tab" data-i="5" aria-selected="false"><span>פרויקט קוד</span><i></i></button></div>
+  <div class="player">
+    <div class="stagebox">
+      <div class="screen stage" data-scene="desk" data-say="תראו כמה בלגן">
+      <div class="menubar"><span>Finder</span><span>File</span><span>View</span><span class="face"></span><span class="clock">16:20</span></div>
+      <div class="desk"></div>
+      <div class="cl"><svg viewBox="0 0 120 80"><use href="#claudy"/></svg></div>
+      <div class="bubble off"></div>
+    </div><div class="screen stage" data-scene="edit" data-say="שלושה צעדים, זה הכל">
+      <div class="menubar"><span>Editor</span><span>File</span><span>Clip</span><span class="face"></span><span class="clock">11:05</span></div>
+      <div class="win ed">
+        <div class="bar"><i></i><i></i><i></i><span>טיול לים.mov</span></div>
+        <div class="tools"><u data-t="select">Select</u><u data-t="blade">✂ Blade</u><u>Trim</u><u>Text</u><u class="exp" data-t="export">Export ↗</u></div>
+        <div class="viewer"><div></div></div>
+        <div class="tl" data-t="tl">
+          <div class="track"><b style="width:22%"></b><b style="width:30%" data-t="clip"></b><b style="width:18%"></b><b style="width:24%"></b></div>
+          <div class="track a"><b style="width:52%"></b><b style="width:40%"></b></div>
+          <div class="head"></div>
+        </div>
+      </div>
+      <div class="ring"></div>
+      <svg class="arrow"><use href="#arrow"/></svg>
+      <div class="cl"><svg viewBox="0 0 120 80"><use href="#claudy"/></svg></div>
+      <div class="bubble off"></div>
+      <div class="steps"><i></i><i></i><i></i></div>
+    </div><div class="screen stage" data-scene="dict" data-say="אני מקשיב">
+      <div class="menubar"><span>Messages</span><span>Edit</span><span class="face"></span><span class="clock">18:47</span></div>
+      <div class="win chat">
+        <div class="bar"><i></i><i></i><i></i><span>אמא</span></div>
+        <div class="log"><p>מתי אתה מגיע?</p></div>
+        <div class="field"><span class="txt"></span><span class="caret"></span></div>
+      </div>
+      <div class="key" style="left:8%; bottom:5%">⌥<small>right</small></div>
+      <div class="wave" style="left:22%; bottom:8%"></div>
+      <div class="cl"><svg viewBox="0 0 120 80"><use href="#claudy"/></svg></div>
+    </div><div class="screen stage" data-scene="shelf" data-say="תנו לי, אני אחזיק">
+      <div class="menubar"><span>Safari</span><span>File</span><span class="face"></span><span class="clock">13:12</span></div>
+      <div class="win" style="left:6%; top:42%; width:56%; height:52%">
+        <div class="bar"><i></i><i></i><i></i><span>טופס הגשה</span></div>
+        <div class="drop" style="inset:3em 1.4em 1.4em">גוררים קבצים לכאן</div>
+      </div>
+      <div class="desk"></div>
+      <div class="strip" style="opacity:0"></div>
+      <div class="cl" style="width:3.4em;height:2.4em"><svg viewBox="0 0 120 80"><use href="#claudy"/></svg><span class="badge" style="transform:scale(0)">0</span></div>
+    </div><div class="screen stage" data-scene="hands" data-say="שנייה, אני על זה">
+      <div class="menubar"><span>Messages</span><span>Edit</span><span class="face"></span><span class="clock">19:02</span></div>
+      <div class="win msgr">
+        <div class="bar"><i></i><i></i><i></i><span>הודעות</span></div>
+        <div class="contacts">
+          <div class="search">חיפוש</div>
+          <div class="c" data-t="mom"><i></i><div>אמא<small>מתי אתה מגיע?</small></div></div>
+          <div class="c"><i></i><div>נועה<small>שלחתי לך את הקובץ</small></div></div>
+          <div class="c"><i></i><div>ועד הבית<small>מחר יש מים חמים</small></div></div>
+          <div class="c"><i></i><div>יואב<small>נדבר בערב</small></div></div>
+        </div>
+        <div class="conv"><div class="log"><p>מתי אתה מגיע?</p></div><div class="field"><span class="txt" style="color:var(--mist-3)">הודעה</span></div></div>
+      </div>
+      <svg class="arrow"><use href="#arrow"/></svg>
+      <div class="cl"><svg viewBox="0 0 120 80"><use href="#claudy"/></svg></div>
+      <svg class="check" viewBox="0 0 40 40"><circle cx="20" cy="20" r="19" fill="#7DE3B5"/><path d="M11 20.5l6 6 12-13" fill="none" stroke="#1B1426" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div><div class="screen stage" data-scene="proj" data-say="קסדה, ויאללה לעבודה">
+      <div class="menubar"><span>Claude</span><span class="face"></span><span class="clock">22:30</span></div>
+      <div class="win plist">
+        <div data-p="0">video-bot<small>בוט הורדת סרטונים</small></div>
+        <div>portfolio-site<small>האתר האישי</small></div>
+        <div>seminar<small>סמינריון</small></div>
+      </div>
+      <div class="win term">
+        <div class="bar"><i></i><i></i><i></i><span>video-bot</span></div>
+        <div class="body">
+          <div class="ln"><b>›</b>resume session 7f3a… (yesterday)</div>
+          <div class="ln"><b>read</b>bot/handlers.py</div>
+          <div class="ln"><b>edit</b>add_download_button()</div>
+          <div class="ln"><b>run</b>pytest -q</div>
+          <div class="ln"><span class="ok">✓ 14 passed</span></div>
+          <div class="ln"><b>say</b>הכפתור נוסף ועובד</div>
+        </div>
+      </div>
+      <div class="cl"><svg viewBox="0 0 120 80"><use href="#claudy"/></svg></div>
+      <div class="bubble off"></div>
+    </div>
+      <button class="playov" id="playov" aria-label="הפעלה">
+        <span class="sit" id="sit"></span>
+        <span class="pbtn"><svg viewBox="0 0 24 24" width="30" height="30"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></svg></span>
+      </button>
+      <div class="pbar"><button id="pp" aria-label="השהיה"><svg viewBox="0 0 24 24" width="16" height="16"><path id="ppIcon" d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" fill="currentColor"/></svg></button><div class="scrub"><i id="scrubFill"></i></div><span id="ptime">0:00</span></div>
+    </div>
+    <div class="explain">
+      <span class="kicker" id="exKick"></span>
+      <h3 id="exTitle"></h3>
+      <div class="ask" id="exAsk"><svg><use href="#mic"/></svg><span></span></div>
+      <ol class="beats" id="beats"></ol>
+      <p class="next" id="exNext"></p>
+    </div>
+  </div>
+</section>
+
+<section class="wrap" id="can">
+  <div class="section-head">
+    <span class="eyebrow">יכולות</span>
+    <h2>מה Claudy יכול לעשות?</h2>
+    <p>כל מה ש-Claude יודע, עם עיניים על המסך וידיים על המקלדת.</p>
+  </div>
+  <div class="caps" id="caps"></div>
+</section>
+
+<section class="wrap">
+  <div class="section-head">
+    <span class="eyebrow">איך מדברים איתו</span>
+    <h2>שלוש דרכים, כולן מכל מקום</h2>
+  </div>
+  <div class="ways">
+    <div class="way" data-say="נגיעה קטנה ואני ער">
+      <div class="keys"><kbd style="padding:0 8px"><svg width="34" height="23" viewBox="0 0 120 80"><use href="#claudy"/></svg></kbd></div>
+      <h3>לחיצה עליו</h3>
+      <p>הוא גר בשורת התפריטים, ישן בשקט. לחיצה מעירה אותו, והוא בא לשבת ליד העכבר.</p>
+    </div>
+    <div class="way" data-say="מחזיקים ומדברים">
+      <div class="keys"><kbd>⌥</kbd></div>
+      <h3>להחזיק ⌥ ימני</h3>
+      <p>כשהסמן בשדה טקסט, מה שאומרים נכתב שם. כשפונים אליו בשם, "קלודי…", זו בקשה.</p>
+    </div>
+    <div class="way" data-say="או פשוט לכתוב לי">
+      <div class="keys"><kbd>⌃</kbd><kbd>⌥</kbd><kbd>C</kbd></div>
+      <h3>לכתוב לו</h3>
+      <p>תיבה קטנה נפתחת ליד העכבר. כותבים, Enter, וממשיכים לעבוד בזמן שהוא חושב.</p>
+    </div>
+  </div>
+
+  <div class="privacy" id="privacy">
+    <div>
+      <span class="eyebrow">פרטיות</span>
+      <h2 style="margin-top:14px">מה הוא רואה, ומתי</h2>
+    </div>
+    <ul>
+      <li><span><b>צילום מסך רק כשפונים אליו.</b> הוא לא מצלם ברקע ולא שומר תמונות אחרי שענה.</span></li>
+      <li><span><b>מנהלי סיסמאות חסומים תמיד.</b> 1Password, Keychain ודומיהם לא נכנסים לצילום ולא לידיים שלו.</span></li>
+      <li><span><b>ההכתבה מתומללת על המחשב.</b> הקול לא יוצא החוצה, רק הטקסט.</span></li>
+      <li><span><b>תשלום, כניסה לחשבון או מחיקה דורשים אישור.</b> כל השאר קורה בלי לשאול.</span></li>
+    </ul>
+  </div>
+</section>
+
+<section class="dl" id="download">
+  <svg class="big"><use href="#mark"/></svg>
+  <h2>מוכנים להכיר?</h2>
+  <p>מורידים, פותחים, ו-Claudy מתיישב בשורת התפריטים. ההתקנה לוקחת דקה.</p>
+  <div class="platforms">
+    <div class="plat main" data-say="זה אני! לחיצה ואני אצלך">
+      <h3><svg><use href="#apple"/></svg>Mac</h3>
+      <div class="meta">גרסה <span data-version>1.1.0</span> · macOS 14 ומעלה · Apple Silicon</div>
+      <a class="btn" id="dlMac" href="downloads/Claudy-mac.zip" download>הורדה ל-Mac</a>
+    </div>
+    <div class="plat" data-say="עובדים על זה">
+      <h3><svg><use href="#win"/></svg>Windows <span class="soon">בקרוב</span></h3>
+      <div class="meta">Windows 10 ו-11</div>
+      <a class="btn ghost" id="dlWin" href="downloads/Claudy-windows.zip" aria-disabled="true">עוד לא זמין</a>
+    </div>
+  </div>
+  <div class="steps-install">
+    <span>צריך חשבון Claude ואת אפליקציית Claude מותקנת על המחשב.</span>
+    <span>אחרי ההורדה: פותחים את הקובץ ולוחצים פעמיים על "התקנה". בפעם הראשונה macOS יבקש הרשאה להקלטת מסך ולנגישות.</span>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <a class="logo" href="#top"><svg><use href="#mark"/></svg><b>claudy</b></a>
+    <span>עוזר מסך אישי, בנוי על Claude.</span><span style="margin-inline-start:auto">גרסה <span data-version>1.1.0</span></span>
+  </div>
+</footer>
+
+<div id="buddy" aria-hidden="true">
+  <svg viewBox="0 0 120 80">
+    <defs>
+      <clipPath id="bcl"><ellipse cx="41" cy="40" rx="13.5" ry="16"/></clipPath>
+      <clipPath id="bcr"><ellipse cx="79" cy="40" rx="13.5" ry="16"/></clipPath>
+    </defs>
+    <g id="bBody">
+      <rect x="10" y="10" width="100" height="60" rx="26" fill="#1F1B19" stroke="#FF7814" stroke-width="3.5"/>
+      <g clip-path="url(#bcl)"><ellipse cx="41" cy="40" rx="13.5" ry="16" fill="#fff"/><circle class="pu" cx="41" cy="40" r="6.8" fill="#121212"/><circle class="hi" cx="43" cy="37.5" r="1.9" fill="#fff"/><rect class="lid" x="25" y="22" width="32" height="0" fill="#1F1B19"/></g>
+      <g clip-path="url(#bcr)"><ellipse cx="79" cy="40" rx="13.5" ry="16" fill="#fff"/><circle class="pu" cx="79" cy="40" r="6.8" fill="#121212"/><circle class="hi" cx="81" cy="37.5" r="1.9" fill="#fff"/><rect class="lid" x="63" y="22" width="32" height="0" fill="#1F1B19"/></g>
+      <path class="brow" d="M30 18 Q41 13 52 18" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity="0"/>
+      <path class="brow" d="M68 18 Q79 13 90 18" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity="0"/>
+      <ellipse id="bMouth" cx="60" cy="60" rx="0" ry="0" fill="#0B0908" stroke="#FF7814" stroke-width="1.5"/>
+    </g>
+    <g id="bProps"></g>
+  </svg>
+  <span class="zz">z z</span>
+  <div class="say"></div>
+</div>
+</div>
+
+<script>
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const seg = (p, a, b) => clamp((p - a) / (b - a));
+const ease = t => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+const lerp = (a, b, t) => a + (b - a) * t;
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* Positions inside a stage, in % of the stage, from an element's box. */
+function spot(stage, el, ax = .5, ay = .5) {
+  const s = stage.getBoundingClientRect(), r = el.getBoundingClientRect();
+  return { x: (r.left - s.left + r.width * ax) / s.width * 100, y: (r.top - s.top + r.height * ay) / s.height * 100,
+           w: r.width / s.width * 100, h: r.height / s.height * 100 };
+}
+const place = (el, x, y) => { el.style.left = x + "%"; el.style.top = y + "%"; };
+function say(b, text, x, y) {
+  if (!text) { b.classList.add("off"); return; }
+  if (b.dataset.t !== text) { b.textContent = text; b.dataset.t = text; }
+  b.classList.remove("off"); place(b, x, y);
+}
+
+/* ---------- hero: Claudy points at the highlight button, then wanders ---------- */
+(() => {
+  const st = $("#heroScene"), ring = $("#hRing"), arrow = $("#hArrow"), cl = $("#hCl"), bub = $("#hBub");
+  const tgt = $('[data-t="hl"]', st);
+  function go() {
+    const t = spot(st, tgt);
+    Object.assign(ring.style, { left: (t.x - t.w / 2 - .8) + "%", top: (t.y - t.h / 2 - 1.2) + "%", width: (t.w + 1.6) + "%", height: (t.h + 2.4) + "%" });
+    place(arrow, t.x + 1, t.y + 1);
+    place(cl, t.x + 6, t.y + 9);
+    place(bub, Math.max(2, t.x + 14), t.y + 6);
+  }
+  go(); addEventListener("resize", go); addEventListener("load", go);
+  document.fonts && document.fonts.ready.then(go);
+  // menu-bar face in every scene
+  $$(".menubar .face").forEach(f => f.innerHTML = '<svg width="2.1em" height="1.4em" viewBox="0 0 120 80" style="vertical-align:middle"><use href="#claudy"/></svg>');
+})();
+
+/* ---------- scenes ---------- */
+const scenes = {};
+
+/* 1. desktop cleanup */
+scenes.desk = (() => {
+  const files = [
+    ["תמונה 2031.jpg", "img", "JPG", 0], ["חשבונית מאי.pdf", "pdf", "PDF", 1], ["סיכום.docx", "doc", "DOC", 2],
+    ["IMG_4410.heic", "img", "HEIC", 0], ["חוזה שכירות.pdf", "pdf", "PDF", 1], ["רשימת קניות.txt", "doc", "TXT", 2],
+    ["צילום מסך.png", "img", "PNG", 0], ["קבלה 0417.pdf", "pdf", "PDF", 1], ["הרצאה 3.docx", "doc", "DOC", 2],
+    ["סלפי.jpg", "img", "JPG", 0], ["ביטוח רכב.pdf", "pdf", "PDF", 1], ["רעיונות.docx", "doc", "DOC", 2],
+  ];
+  const starts = [[8, 14], [24, 22], [44, 15], [62, 26], [78, 13], [14, 44], [34, 50], [55, 42], [74, 48], [20, 70], [48, 72], [70, 70]];
+  const folders = [["תמונות", 16, 76], ["מסמכים רשמיים", 44, 76], ["עבודה", 72, 76]];
+  return stage => {
+    const desk = $(".desk", stage);
+    desk.innerHTML = folders.map(([n, x, y], i) => `<div class="folder" data-f="${i}" style="left:${x}%;top:${y}%"><em>0</em><div class="fi"></div><b>${n}</b></div>`).join("") +
+      files.map(([n, k, ext], i) => `<div class="file" data-i="${i}" style="left:${starts[i][0]}%;top:${starts[i][1]}%"><div class="ic" data-k="${k}" data-ext="${ext}"></div><span>${n}</span></div>`).join("");
+    const fEls = $$(".file", desk), dEls = $$(".folder", desk), cl = $(".cl", stage), bub = $(".bubble", stage);
+    return p => {
+      const fo = ease(seg(p, .08, .22));
+      dEls.forEach(d => d.style.transform = `scale(${fo})`);
+      const counts = [0, 0, 0];
+      let active = -1;
+      fEls.forEach((el, i) => {
+        const f = files[i][3], a = .22 + i * .045, t = ease(seg(p, a, a + .12));
+        const [sx, sy] = starts[i], [, tx, ty] = folders[f];
+        el.style.left = lerp(sx, tx + 1.2, t) + "%"; el.style.top = lerp(sy, ty - 2, t) + "%"; el.style.transform = `scale(${1 - .6 * t})`;
+        el.style.opacity = t > .96 ? 0 : 1;
+        if (t > .96) counts[f]++;
+        if (t > 0 && t < 1) active = i;
+      });
+      dEls.forEach((d, i) => { const e = $("em", d); e.textContent = counts[i]; e.style.display = counts[i] ? "" : "none"; });
+      if (active >= 0) { const [sx, sy] = starts[active]; place(cl, sx + 5, sy - 3); }
+      else if (p < .22) place(cl, 86, 30); else place(cl, 46, 50);
+      if (p < .1) say(bub, "12 קבצים על השולחן. מתחיל.", 60, 36);
+      else if (p < .22) say(bub, "שלוש תיקיות: תמונות, מסמכים רשמיים ועבודה.", 46, 28);
+      else if (p > .82) say(bub, "סידרתי 12 קבצים ב-3 תיקיות. לא מחקתי כלום.", 30, 34);
+      else say(bub, null);
+    };
+  };
+})();
+
+/* 2. editing tutorial */
+scenes.edit = stage => {
+  const ring = $(".ring", stage), arrow = $(".arrow", stage), cl = $(".cl", stage), bub = $(".bubble", stage), dots = $$(".steps i", stage);
+  const steps = [
+    ['[data-t="blade"]', "לוחצים על הלהב, או B במקלדת."],
+    ['[data-t="clip"]', "עכשיו לוחצים על הקליפ בדיוק איפה שרוצים לחתוך."],
+    ['[data-t="export"]', "וזהו. Export, ובוחרים איכות."],
+  ];
+  let last = -2;
+  return p => {
+    const k = p < .12 ? -1 : p < .42 ? 0 : p < .72 ? 1 : 2;
+    dots.forEach((d, i) => d.classList.toggle("on", i === k));
+    if (k === last) return; last = k;
+    if (k < 0) { ring.style.opacity = 0; arrow.style.opacity = 0; place(cl, 82, 44); say(bub, "יש פה שלושה צעדים. אני מראה כל אחד.", 50, 30); return; }
+    const t = spot(stage, $(steps[k][0], stage));
+    ring.style.opacity = 1; arrow.style.opacity = 1;
+    Object.assign(ring.style, { left: (t.x - t.w / 2 - .7) + "%", top: (t.y - t.h / 2 - 1) + "%", width: (t.w + 1.4) + "%", height: (t.h + 2) + "%" });
+    place(arrow, t.x + .5, t.y + 1);
+    place(cl, clamp(t.x + 4, 4, 88), clamp(t.y + 8, 10, 80));
+    say(bub, steps[k][1], clamp(t.x - 10, 2, 58), clamp(t.y + (t.y > 60 ? -24 : 12), 8, 70));
+  };
+};
+
+/* 3. dictation */
+scenes.dict = stage => {
+  const key = $(".key", stage), wave = $(".wave", stage), txt = $(".txt", stage), field = $(".field", stage), cl = $(".cl", stage), log = $(".log", stage);
+  wave.innerHTML = "<i></i>".repeat(14);
+  const bars = $$("i", wave);
+  const raw = "בדרך אני אהיה אצלך בעוד עשר דקות תשאירי לי קפה".split(" ");
+  const done = "בדרך! אהיה אצלך בעוד 10 דקות, תשאירי לי קפה.";
+  let sent = false;
+  place(cl, 84, 80);
+  return (p, time) => {
+    const talking = p > .08 && p < .62;
+    key.classList.toggle("down", talking);
+    field.classList.toggle("live", talking);
+    bars.forEach((b, i) => b.style.height = talking ? (25 + 70 * Math.abs(Math.sin(time / 140 + i * .9) * Math.sin(time / 330 + i))) + "%" : "15%");
+    if (p < .62) {
+      const n = Math.floor(seg(p, .12, .58) * raw.length);
+      txt.className = "txt raw"; txt.textContent = raw.slice(0, n).join(" ");
+    } else if (p < .82) { txt.className = "txt"; txt.textContent = done; }
+    const s = p > .84;
+    if (s !== sent) {
+      sent = s;
+      $$(".me", log).forEach(e => e.remove());
+      if (s) { log.insertAdjacentHTML("beforeend", `<p class="me">${done}</p>`); txt.textContent = ""; }
+    }
+  };
+};
+
+/* 4. shelf */
+scenes.shelf = stage => {
+  const desk = $(".desk", stage), strip = $(".strip", stage), cl = $(".cl", stage), badge = $(".badge", stage), drop = $(".drop", stage);
+  const items = [["מצגת.pdf", "pdf", "PDF", 72, 30], ["חוזה.pdf", "pdf", "PDF", 84, 46], ["תמונת פרופיל.jpg", "img", "JPG", 70, 64]];
+  desk.innerHTML = items.map(([n, k, e, x, y]) => `<div class="file" style="left:${x}%;top:${y}%"><div class="ic" data-k="${k}" data-ext="${e}"></div><span>${n}</span></div>`).join("");
+  strip.innerHTML = items.map(([n, k, e]) => `<div class="tile"><div class="ic" data-k="${k}" data-ext="${e}" style="position:relative;border-radius:.3em .7em .3em .3em"></div>${n.split(".")[0]}</div>`).join("") +
+    '<div class="tile" style="opacity:.35"></div>'.repeat(3);
+  const fEls = $$(".file", desk), tiles = $$(".tile", strip);
+  const home = () => { const f = spot(stage, $(".menubar .face", stage)); return f; };
+  return p => {
+    const h = home();
+    place(cl, h.x - 2.2, h.y - 2.4);
+    let n = 0;
+    fEls.forEach((el, i) => {
+      const t = ease(seg(p, .06 + i * .09, .18 + i * .09));
+      const [, , , sx, sy] = items[i];
+      el.style.left = lerp(sx, h.x - 2, t) + "%"; el.style.top = lerp(sy, h.y - 3, t) + "%";
+      el.style.transform = `scale(${1 - .75 * t})`; el.style.opacity = t > .95 ? 0 : 1;
+      if (t > .95) n++;
+    });
+    badge.textContent = n; badge.style.transform = `scale(${n ? 1 : 0})`;
+    const o = ease(seg(p, .42, .56));
+    const w = lerp(4, 50, o);
+    strip.style.opacity = o; strip.style.left = clamp(h.x + 3 - w, 1, 99) + "%";
+    strip.style.width = w + "%"; strip.style.transform = `scaleY(${.5 + .5 * o})`; strip.style.transformOrigin = "100% 0";
+    // drag the first tile out to the drop zone
+    const d = ease(seg(p, .62, .82));
+    const t0 = tiles[0];
+    if (d > 0 && d < 1) { t0.style.transform = `translate(${-d * 9}em, ${d * 13}em) rotate(${-6 * d}deg)`; t0.style.opacity = 1; }
+    else t0.style.transform = "";
+    if (d >= 1) t0.style.opacity = .25;
+    const ok = p > .82;
+    drop.classList.toggle("ok", ok);
+    drop.textContent = ok ? "✓ מצגת.pdf הועלתה" : "גוררים קבצים לכאן";
+    if (p > .88) { strip.style.opacity = 1 - seg(p, .88, .96); }
+  };
+};
+
+/* 5. hands */
+scenes.hands = stage => {
+  const arrow = $(".arrow", stage), cl = $(".cl", stage), search = $(".search", stage), mom = $('[data-t="mom"]', stage), txt = $(".conv .txt", stage),
+        log = $(".conv .log", stage), check = $(".check", stage);
+  const msg = "הגעתי הביתה, הכל טוב";
+  let sent = false;
+  return p => {
+    const sp = spot(stage, search), mp = spot(stage, mom), fp = spot(stage, $(".conv .field", stage));
+    let a;
+    if (p < .12) a = [92, 70];
+    else if (p < .36) a = [sp.x + 4, sp.y];
+    else if (p < .5) a = [mp.x, mp.y];
+    else a = [fp.x - 10, fp.y];
+    place(arrow, a[0], a[1]); place(cl, clamp(a[0] + 4, 3, 90), clamp(a[1] + 6, 10, 82));
+    search.classList.toggle("on", p > .14 && p < .5);
+    const q = "אמא".slice(0, Math.floor(seg(p, .18, .32) * 3));
+    search.textContent = p > .14 && p < .5 ? (q || "|") : "חיפוש";
+    mom.classList.toggle("on", p > .46);
+    const typed = msg.slice(0, Math.floor(seg(p, .54, .78) * msg.length));
+    const s = p > .84;
+    txt.textContent = s ? "הודעה" : (typed || "הודעה");
+    txt.style.color = typed && !s ? "var(--mist)" : "var(--mist-3)";
+    if (s !== sent) { sent = s; $$(".me", log).forEach(e => e.remove()); if (s) log.insertAdjacentHTML("beforeend", `<p class="me">${msg}</p>`); }
+    check.classList.toggle("on", p > .88);
+    place(check, clamp(a[0] - 6, 2, 80), clamp(a[1] - 20, 8, 70));
+  };
+};
+
+/* 6. projects */
+scenes.proj = stage => {
+  const cl = $(".cl", stage), bub = $(".bubble", stage), lines = $$(".ln", stage), first = $('[data-p="0"]', stage);
+  // a work helmet on top of the mark
+  cl.innerHTML = `<svg viewBox="0 0 120 80"><use href="#claudy"/><g class="helmet" style="transition:transform .5s cubic-bezier(.3,1.6,.5,1),opacity .3s">
+    <path d="M26 16 Q26 -22 60 -22 Q94 -22 94 16 Z" fill="#FFCC1A" stroke="#1B1426" stroke-opacity=".5" stroke-width="2"/>
+    <rect x="53" y="-22" width="14" height="38" rx="4" fill="#E69E00"/><rect x="16" y="10" width="88" height="9" rx="4.5" fill="#FFCC1A" stroke="#1B1426" stroke-opacity=".5" stroke-width="2"/></g></svg>`;
+  const helmet = $(".helmet", cl);
+  return p => {
+    const on = p > .2;
+    helmet.style.opacity = on ? 1 : 0; helmet.style.transform = on ? "none" : "translateY(-30px)";
+    first.classList.toggle("on", p > .12);
+    lines.forEach((l, i) => l.classList.toggle("on", p > .26 + i * .09));
+    place(cl, p < .12 ? 80 : 20, p < .12 ? 70 : 76);
+    if (p < .12) say(bub, "מחפש את הבוט בין הפרויקטים…", 50, 50);
+    else if (p < .26) say(bub, "מצאתי: video-bot. ממשיך מאתמול.", 30, 60);
+    else if (p > .84) say(bub, "הכפתור נוסף ועובד. רואים את זה גם באפליקציית Claude.", 34, 56);
+    else say(bub, null);
+  };
+};
+
+/* ---------- examples player ---------- */
+const META = {
+  desk: { kick: "סידור", title: "שולחן עבודה מסודר", ask: "קלודי, תסדר לי את שולחן העבודה",
+    sit: "שולחן העבודה מלא קבצים מכל הסוגים. אומרים ל-Claudy: תסדר.",
+    beats: [[0, "סופר 12 קבצים מפוזרים על השולחן"], [.1, "פותח שלוש תיקיות לפי סוג: תמונות, מסמכים רשמיים, עבודה"],
+            [.24, "מעביר כל קובץ לתיקייה שלו"], [.84, "מדווח מה עשה. שום קובץ לא נמחק"]] },
+  edit: { kick: "הדרכה", title: "לומדים את התוכנה בתוך התוכנה", ask: "איך חותכים את הקטע הזה ומייצאים?",
+    sit: "תוכנת עריכה פתוחה, ולא ברור איפה הכלים. שואלים את Claudy.",
+    beats: [[0, "רואה את המסך ומבין באיזו תוכנה מדובר"], [.12, "צעד 1: מקיף את כלי החיתוך ומסביר"],
+            [.42, "צעד 2: מראה איפה בדיוק ללחוץ על הקליפ"], [.72, "צעד 3: מוביל לייצוא"]] },
+  dict: { kick: "הכתבה", title: "מדברים, והטקסט נכנס לשדה", ask: "מחזיקים ⌥ ימני ומדברים",
+    sit: "אמא שואלת מתי מגיעים. הידיים עסוקות, אז מכתיבים.",
+    beats: [[.08, "מחזיקים ⌥ ימני, Claudy מקשיב"], [.14, "התמלול רץ על המחשב, מילה אחרי מילה"],
+            [.62, "משחררים: הוא מוסיף פיסוק והופך מילים למספרים"], [.84, "הטקסט נכנס לשדה ונשלח"]] },
+  shelf: { kick: "המדף", title: "מדף לקבצים שבדרך", ask: "גוררים קבצים אל Claudy",
+    sit: "צריך להעלות מצגת לטופס, והקבצים מפוזרים בכל מקום.",
+    beats: [[.05, "גוררים שלושה קבצים אל Claudy בשורת התפריטים"], [.42, "המדף נפתח ומראה מה מחכה"],
+            [.62, "גוררים את המצגת ישר לטופס"], [.82, "הקובץ עלה"]] },
+  hands: { kick: "ידיים", title: "מבקשים, והוא עושה", ask: "תכתוב לאמא שהגעתי",
+    sit: "הגעתם הביתה וצריך לעדכן את אמא. אומרים את זה ל-Claudy.",
+    beats: [[.1, "פותח את אפליקציית ההודעות"], [.16, "מחפש את אמא"], [.46, "נכנס לשיחה"],
+            [.54, "מקליד את ההודעה ושולח"], [.88, "וי אחד גדול: בוצע"]] },
+  proj: { kick: "פרויקטים", title: "ממשיך פרויקט ב-Claude Code", ask: "תמשיך בבוט ותוסיף כפתור הורדה",
+    sit: "יש בוט שעבדתם עליו אתמול ב-Claude Code. מבקשים להמשיך.",
+    beats: [[.05, "מחפש את הפרויקט בין השיחות שלך"], [.2, "חובש קסדה ונכנס לשיחה של אתמול"],
+            [.3, "קורא את הקוד, עורך ומריץ בדיקות"], [.84, "מדווח. הכל שמור גם באפליקציית Claude"]] },
+};
+const DUR = 11000;
+const player = (() => {
+  const tabsEl = $$(".tab"), stagesEl = $$(".stagebox .stage"), ov = $("#playov"), beatsEl = $("#beats");
+  const order = stagesEl.map(st => st.dataset.scene);
+  const runs = stagesEl.map(st => scenes[st.dataset.scene](st));
+  let cur = 0, t = 0, playing = false, started = false, lastT = 0, endHold = 0;
+  function select(i, autoplay) {
+    cur = i; t = 0; endHold = 0;
+    tabsEl.forEach((b, k) => { b.setAttribute("aria-selected", k === i); b.style.setProperty("--p", 0); });
+    stagesEl.forEach((st, k) => st.classList.toggle("on", k === i));
+    const m = META[order[i]];
+    $("#exKick").textContent = `0${i + 1} · ${m.kick}`;
+    $("#exTitle").textContent = m.title;
+    $("#exAsk span").textContent = `"${m.ask}"`;
+    $("#sit").textContent = m.sit;
+    beatsEl.innerHTML = m.beats.map(([, txt]) => `<li>${txt}</li>`).join("");
+    $("#exNext").textContent = "";
+    runs[i](0, performance.now());
+    playing = !!autoplay;
+    ov.classList.toggle("hide", playing);
+    draw();
+  }
+  function draw() {
+    const p = clamp(t / DUR), m = META[order[cur]];
+    tabsEl[cur].style.setProperty("--p", p);
+    $("#scrubFill").style.width = p * 100 + "%";
+    const sec = Math.floor(t / 1000); $("#ptime").textContent = `0:${String(sec).padStart(2, "0")}`;
+    $("#ppIcon").setAttribute("d", playing ? "M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" : "M8 5.5v13l10.5-6.5z");
+    const lis = $$("li", beatsEl);
+    let now = -1; m.beats.forEach(([at], k) => { if (p >= at && (t > 0)) now = k; });
+    lis.forEach((li, k) => { li.className = k < now || (p >= 1 && k === now) ? "done" : k === now ? "now" : ""; });
+  }
+  function loop(ts) {
+    const dt = Math.min(400, ts - (lastT || ts)); lastT = ts;
+    if (playing) {
+      if (t < DUR) { t = Math.min(DUR, t + dt); runs[cur](t / DUR, ts); }
+      else {
+        endHold += dt;
+        const nxt = (cur + 1) % order.length;
+        $("#exNext").textContent = `עוד רגע: ${META[order[nxt]].title}`;
+        if (endHold > 2600) select(nxt, true);
+      }
+      draw();
+    } else if (order[cur] === "dict") runs[cur](t / DUR, ts);
+    requestAnimationFrame(loop);
+  }
+  ov.addEventListener("click", () => { started = true; if (t >= DUR) t = 0; playing = true; ov.classList.add("hide"); draw(); });
+  $("#pp").addEventListener("click", () => {
+    if (t >= DUR) { select(cur, true); return; }
+    playing = !playing; started = true; ov.classList.toggle("hide", playing || t > 0); draw();
+  });
+  tabsEl.forEach((b, i) => b.addEventListener("click", () => select(i, started)));
+  $(".stagebox").addEventListener("keydown", e => { if (e.key === " ") { e.preventDefault(); $("#pp").click(); } });
+  // pause when the player scrolls out of view, resume when it's back
+  let wasPlaying = false;
+  new IntersectionObserver(([e]) => {
+    if (!e.isIntersecting) { wasPlaying = playing; playing = false; draw(); }
+    else if (wasPlaying) { playing = true; wasPlaying = false; }
+  }, { threshold: .25 }).observe($(".player"));
+  select(0, false);
+  requestAnimationFrame(loop);
+  return { select, seek(p) { t = p * DUR; runs[cur](p, performance.now()); draw(); } };
+})();
+window.__goto = (name, p) => { const i = $$(".stagebox .stage").findIndex(s => s.dataset.scene === name); player.select(i, false); $("#playov").classList.add("hide"); player.seek(p); };
+
+/* ---------- capabilities ---------- */
+(() => {
+  const I = {
+    point: '<path d="M5 3l14 7-6 2-2 6z"/>',
+    hand: '<path d="M8 12V5.5a1.5 1.5 0 0 1 3 0V11m0-1V4.5a1.5 1.5 0 0 1 3 0V11m0-.5V6a1.5 1.5 0 0 1 3 0v8a6 6 0 0 1-6 6h-1a6 6 0 0 1-4.8-2.4L3.6 15a1.5 1.5 0 0 1 2.3-1.9L8 15"/>',
+    mic: '<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>',
+    eye: '<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+    files: '<path d="M4 7a2 2 0 0 1 2-2h4l2 2h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M9 13h6"/>',
+    shelf: '<path d="M3 8h18M3 16h18"/><rect x="5" y="3" width="4" height="5" rx="1"/><rect x="12" y="11" width="5" height="5" rx="1"/>',
+    cal: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+    code: '<path d="M8 8l-5 4 5 4M16 8l5 4-5 4M14 5l-4 14"/>',
+    web: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 3 2.5 15 0 18M12 3c-2.5 3-2.5 15 0 18"/>',
+  };
+  const C = [
+    ["point", "מראה איפה ללחוץ", "הדרכה צעד אחרי צעד בכל תוכנה: חץ כתום, מסגרת סביב הכפתור והסבר קצר. אפשר לשמור הדרכה ולהריץ אותה שוב.", "איך מוסיפים חתימה במייל?"],
+    ["hand", "עושה את זה בשבילך", "פותח אפליקציות, לוחץ, מקליד ושולח. כל תזוזה של העכבר עוצרת אותו, ותשלומים או כניסה לחשבון תמיד מחכים לאישור.", "תשלח לנועה את הקובץ בוואטסאפ"],
+    ["mic", "הכתבה לכל שדה", "מחזיקים ⌥ ימני ומדברים. תמלול עברית על המחשב עצמו, עם פיסוק, ישר לשדה שבו הסמן נמצא.", "מייל, צ'אט, מסמך, כל שדה"],
+    ["eye", "מסביר מה רואים", "שואלים על מה שעל המסך, והוא רואה את אותו מסך. הודעת שגיאה, גרף, הגדרה שלא ברור מה היא עושה.", "מה אומרת השגיאה הזאת?"],
+    ["files", "מסדר קבצים", "ממיין תיקיות, משנה שמות בכמויות, ממיר פורמטים ומסכם מסמכים ארוכים. לא מוחק בלי לשאול.", "תשנה את שמות התמונות לפי תאריך"],
+    ["shelf", "מדף קבצים", "עד עשרה קבצים מחכים אצלו בשורת התפריטים. גוררים אותם החוצה כשצריך, והוא יכול לצרף אותם למייל או להעלות לאתר.", "תצרף את הקובץ מהמדף למייל"],
+    ["cal", "יומן, מייל ו-Drive", "דרך החיבורים של חשבון Claude שלך: קובע פגישות, מוצא מיילים, קורא ומסכם קבצים בדרייב.", "מה יש לי מחר בבוקר?"],
+    ["code", "ממשיך פרויקטים בקוד", "נכנס לשיחה הקיימת של פרויקט ב-Claude Code וממשיך משם. ההתקדמות נשמרת באפליקציית Claude.", "תמשיך בבוט ותוסיף כפתור הורדה"],
+    ["web", "מחפש ומסכם ברשת", "בודק מחירים, קורא כתבות ומשווה אפשרויות, ומחזיר תשובה קצרה בבועה.", "כמה עולה טיסה לאתונה בפסח?"],
+  ];
+  $("#caps").innerHTML = C.map(([ic, h, p, q]) => `<article class="cap reveal" data-say="${h}? בכיף">
+    <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${I[ic]}</svg></span>
+    <h3>${h}</h3><p>${p}</p><q>"${q}"</q></article>`).join("");
+})();
+
+/* scroll reveal: elements below the fold rise in; anything already on screen just stays */
+(() => {
+  if (reduced || !("IntersectionObserver" in window)) return;
+  const els = $$(".reveal, .way, .privacy li, .plat");
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.remove("pre"); io.unobserve(e.target); } }), { rootMargin: "0px 0px -8% 0px" });
+  els.forEach((el, i) => {
+    el.classList.add("reveal");
+    if (el.getBoundingClientRect().top > innerHeight) { el.classList.add("pre"); el.style.transitionDelay = (i % 3) * 80 + "ms"; io.observe(el); }
+  });
+})();
+
+/* ---------- the Claudy that rides next to your mouse (drawn like the real app) ---------- */
+(() => {
+  const b = $("#buddy"); if (!b || matchMedia("(hover: none)").matches) return;
+  const sayEl = $(".say", b), body = $("#bBody"), props = $("#bProps"), mouth = $("#bMouth");
+  const pupils = $$(".pu", b), his = $$(".hi", b), lids = $$(".lid", b), brows = $$(".brow", b);
+  const EYES = [41, 79];
+  let mx = innerWidth * .7, my = innerHeight * .35, x = mx, y = my, vx = 0, vy = 0, last = performance.now();
+  let idleSince = performance.now(), inside = false, blinkAt = performance.now() + 2500, sayUntil = 0, current = "";
+  let trick = null, nextTrick = 7000 + Math.random() * 6000;
+  b.style.opacity = 0;
+  addEventListener("pointermove", e => {
+    mx = e.clientX; my = e.clientY; idleSince = performance.now(); nextTrick = 7000 + Math.random() * 7000;
+    if (trick) endTrick();
+    if (!inside) { inside = true; b.style.opacity = 1; show("היי! אני Claudy", 1800); }
+  });
+  document.addEventListener("pointerleave", () => { inside = false; b.style.opacity = 0; });
+  function show(text, ms = 2200) {
+    if (!text) return;
+    if (text !== current) { sayEl.textContent = text; current = text; }
+    sayEl.classList.add("on"); sayUntil = performance.now() + ms;
+  }
+  document.addEventListener("pointerover", e => { const t = e.target.closest("[data-say]"); if (t) show(t.dataset.say); });
+
+  /* boredom: after some seconds without the mouse moving he does one of these, like in the app */
+  const TRICKS = {
+    look:    { dur: 2600 },                                   // glances around
+    yawn:    { dur: 2400 },
+    roll:    { dur: 1700, say: "נו…" },                       // eye roll
+    flip:    { dur: 1300 },                                   // a backflip
+    juggle:  { dur: 3600 },                                   // three orange balls
+    bubbles: { dur: 3200 },                                   // blows bubbles
+    whistle: { dur: 2600, say: "♪ ♫" },
+  };
+  function startTrick(now) {
+    const names = Object.keys(TRICKS).filter(n => n !== trick?.name);
+    const name = names[Math.floor(Math.random() * names.length)];
+    trick = { name, start: now, dur: TRICKS[name].dur };
+    if (TRICKS[name].say) show(TRICKS[name].say, 1400);
+    props.innerHTML = name === "juggle" ? [0, 1, 2].map(i => `<circle r="5.5" fill="#FF7814" stroke="#FFB45C" stroke-width="1.5" data-i="${i}"/>`).join("")
+      : name === "bubbles" ? [0, 1, 2, 3].map(i => `<circle r="4" fill="none" stroke="#BBA8FF" stroke-width="1.6" data-i="${i}"/>`).join("") : "";
+  }
+  function endTrick() { trick = null; props.innerHTML = ""; body.setAttribute("transform", ""); mouth.setAttribute("rx", 0); mouth.setAttribute("ry", 0); }
+
+  function tick(now) {
+    const dt = Math.min(48, now - last) / 16.7; last = now;
+    const idle = now - idleSince;
+    const asleep = idle > 26000;
+    if (!trick && !asleep && idle > nextTrick) startTrick(now);
+    if (trick && now - trick.start > trick.dur) { endTrick(); nextTrick = idle + 8000 + Math.random() * 8000; }
+    const u = trick ? (now - trick.start) / trick.dur : 0, tn = trick?.name;
+
+    // springy follow, a little behind and below the pointer
+    const tx = mx + 20, ty = my + 20;
+    vx = (vx + (tx - x) * .09 * dt) * .74; vy = (vy + (ty - y) * .09 * dt) * .74;
+    x += vx * dt; y += vy * dt;
+    let tilt = clamp(vx * .9, -14, 14), hop = 0;
+    if (tn === "flip") { tilt += 360 * ease(clamp(u * 1.15)); hop = -Math.sin(Math.PI * clamp(u)) * 26; }
+    if (tn === "whistle") tilt += Math.sin(u * Math.PI * 6) * 6;
+    b.style.transform = `translate(${x}px, ${y + hop}px) rotate(${tilt}deg)`;
+
+    // gaze
+    let lx = clamp((mx - x - 33) / 40, -1, 1), ly = clamp((my - y - 22) / 40, -1, 1);
+    if (tn === "look") { const k = u < .3 ? -1 : u < .55 ? 1 : u < .75 ? -.4 : 0; lx = k; ly = -.2; }
+    if (tn === "roll") { const a = Math.PI * (.1 + 1.8 * ease(u)); lx = -Math.cos(a) * .9; ly = -Math.abs(Math.sin(a)) * .95; }
+    if (tn === "juggle") { const i = Math.floor(u * 9) % 3; lx = [-.5, 0, .5][i]; ly = -1; }
+    if (tn === "bubbles") { lx = 0; ly = -.8; }
+    pupils.forEach((p, i) => { p.setAttribute("cx", EYES[i] + lx * 5.5); p.setAttribute("cy", 40 + ly * 7); });
+    his.forEach((h, i) => { h.setAttribute("cx", EYES[i] + 2 + lx * 5.5); h.setAttribute("cy", 37.5 + ly * 7); });
+
+    // lids: blink, sleepy, yawn squint
+    let blink = 0;
+    if (now > blinkAt) { blink = Math.max(0, Math.sin((now - blinkAt) / 220 * Math.PI)); if (now > blinkAt + 220) blinkAt = now + 2200 + Math.random() * 3500; }
+    let closed = asleep ? 1 : blink;
+    if (tn === "yawn") closed = Math.max(closed, .6 * Math.sin(Math.PI * u));
+    if (tn === "whistle") closed = Math.max(closed, .45);
+    if (idle > 18000 && !asleep) closed = Math.max(closed, .45 * clamp((idle - 18000) / 8000));   // drowsy
+    lids.forEach(l => l.setAttribute("height", 34 * closed));
+    b.classList.toggle("sleep", asleep);
+
+    // brows show only when they mean something
+    const browUp = tn === "roll" ? 1 : tn === "yawn" ? Math.sin(Math.PI * u) : tn === "look" ? .6 : 0;
+    brows.forEach(br => { br.setAttribute("opacity", browUp ? .3 + .7 * browUp : 0); br.setAttribute("transform", `translate(0 ${-browUp * 4})`); });
+
+    // mouth: yawn opens wide, whistle a small o
+    if (tn === "yawn") { const m = Math.sin(Math.PI * clamp(u * 1.1)); mouth.setAttribute("rx", 7 * m); mouth.setAttribute("ry", 6 * m); }
+    else if (tn === "whistle" || tn === "bubbles") { mouth.setAttribute("rx", 3); mouth.setAttribute("ry", 3); }
+
+    // props
+    if (tn === "juggle") $$("circle", props).forEach((c, i) => {
+      const ph = (u * 3 + i / 3) % 1;
+      c.setAttribute("cx", 36 + 48 * ph); c.setAttribute("cy", 2 - Math.sin(Math.PI * ph) * 34);
+    });
+    if (tn === "bubbles") $$("circle", props).forEach((c, i) => {
+      const ph = clamp(u * 1.6 - i * .2);
+      c.setAttribute("cx", 60 + Math.sin(ph * 9 + i) * 8 + i * 3); c.setAttribute("cy", 58 - ph * 70);
+      c.setAttribute("r", 2 + ph * 5); c.setAttribute("opacity", ph > 0 && ph < 1 ? 1 - ph * .8 : 0);
+    });
+    if (now > sayUntil) sayEl.classList.remove("on");
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>
