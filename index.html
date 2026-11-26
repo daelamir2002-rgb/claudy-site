@@ -123,15 +123,34 @@ nav .btn { margin-inline-start: 4px; }
 .ring { position: absolute; z-index: 5; border: .2em solid var(--ember); border-radius: .7em; box-shadow: 0 0 0 .5em rgba(255, 122, 43, .18), 0 0 2em rgba(255, 122, 43, .5);
   transition: all .7s cubic-bezier(.5, 0, .2, 1); pointer-events: none; }
 
-/* hero scene */
-#heroScene .win.notes { left: 7%; top: 16%; width: 52%; height: 62%; }
-.notes .side { position: absolute; inset: 2.2em auto 0 0; width: 34%; border-inline-end: 1px solid rgba(255, 255, 255, .06); padding: .8em; display: grid; gap: .5em; align-content: start; }
-.notes .side b { display: block; height: 2.6em; border-radius: .5em; background: rgba(255, 255, 255, .05); }
-.notes .side b:first-child { background: rgba(255, 122, 43, .18); }
-.notes .page { position: absolute; inset: 2.2em 0 0 34%; padding: 1.2em; display: grid; gap: .7em; align-content: start; }
-.notes .page s { display: block; height: .7em; border-radius: .4em; background: rgba(255, 255, 255, .09); text-decoration: none; }
-.notes .tool { position: absolute; top: 2.9em; left: 1em; display: flex; gap: .4em; direction: ltr; }
-.notes .tool u { width: 1.9em; height: 1.9em; border-radius: .5em; background: rgba(255, 255, 255, .07); display: grid; place-items: center; text-decoration: none; color: var(--mist-2); font-size: .9em; font-weight: 600; }
+/* hero scene: ask → Claudy shows where → the wallpaper changes */
+#heroScene .wall2 { position: absolute; inset: 0; background: linear-gradient(160deg, #FFB45C 0%, #E2532A 45%, #5B2A6E 100%); opacity: 0; transition: opacity 1.2s ease; }
+#heroScene .wall2.on { opacity: 1; }
+.settings { left: 6%; top: 13%; width: 66%; height: 68%; }
+.settings .side { position: absolute; inset: 2.2em 0 0 auto; width: 34%; padding: .6em; display: grid; gap: .15em; align-content: start; border-inline-start: 1px solid rgba(255, 255, 255, .06); }
+.settings .it { display: flex; align-items: center; gap: .55em; padding: .32em .5em; border-radius: .45em; font-size: .95em; color: var(--mist-2); transition: background .3s, color .3s; }
+.settings .it i { width: 1.25em; height: 1.25em; border-radius: .3em; flex: none; }
+.settings .it.on { background: rgba(255, 255, 255, .1); color: var(--mist); }
+.settings .pane { position: absolute; inset: 2.2em 34% 0 0; padding: 1em 1.2em; display: none; align-content: start; gap: .8em; }
+.settings .pane.on { display: grid; animation: paneIn .35s ease; }
+@keyframes paneIn { from { opacity: 0; transform: translateX(.6em); } }
+.settings h4 { margin: 0 0 .2em; font: 600 1.2em/1.2 var(--f-display); color: var(--mist); }
+.settings .row { display: flex; align-items: center; gap: 1em; justify-content: space-between; font-size: .92em; color: var(--mist-2); padding: .5em .7em; border-radius: .5em; background: rgba(255, 255, 255, .04); }
+.settings .row b { width: 45%; height: .35em; border-radius: .3em; background: rgba(255, 255, 255, .12); overflow: hidden; direction: ltr; }
+.settings .row b u { display: block; height: 100%; background: #6366F1; }
+.settings .row em { width: 2.2em; height: 1.25em; border-radius: 1em; background: rgba(255, 255, 255, .14); }
+.settings .tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: .6em; }
+.settings .tiles i { aspect-ratio: 16 / 10; border-radius: .45em; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .1); transition: box-shadow .3s; }
+.settings .tiles i.sel { box-shadow: 0 0 0 .18em #3B82F6; }
+.hask { position: absolute; right: 5%; bottom: 6%; z-index: 9; display: flex; gap: .5em; align-items: center; padding: .55em 1em; border-radius: 1.1em .3em 1.1em 1.1em;
+  background: rgba(187, 168, 255, .2); border: 1px solid rgba(187, 168, 255, .4); color: var(--mist); font-size: 1.05em; backdrop-filter: blur(6px);
+  opacity: 0; transform: translateY(.6em); transition: opacity .4s, transform .4s; }
+.hask.on { opacity: 1; transform: none; }
+.hask svg { width: 1em; height: 1em; color: var(--lilac); }
+#hFace { transition: opacity .3s; }
+.ripple { position: absolute; z-index: 9; width: 2.6em; height: 2.6em; margin: -1.3em 0 0 -1.3em; border-radius: 50%; border: .2em solid var(--ember-hi); opacity: 0; pointer-events: none; }
+.ripple.go { animation: rip .55s ease-out; }
+@keyframes rip { from { opacity: 1; transform: scale(.3); } to { opacity: 0; transform: scale(1.4); } }
 
 /* demos */
 .section-head { padding-block: 110px 30px; display: grid; gap: 14px; max-width: 760px; }
@@ -420,7 +439,7 @@ footer .logo svg { width: 22px; height: 22px; } footer .logo b { font-size: 18px
 <header class="hero" id="top">
   <div class="wrap">
     <div>
-      <span class="eyebrow">ל-Mac, ובקרוב ל-Windows</span>
+      <span class="eyebrow" style="font-family:var(--f-body);text-transform:none;letter-spacing:.02em;font-size:14px">ל-Mac, ובקרוב ל-Windows</span>
       <h1>עוזר שיושב לך <em>על המסך</em></h1>
       <p class="lead">Claudy רואה את המסך יחד איתך. שואלים אותו איך עושים משהו, והוא מצביע על הכפתור הנכון. מבקשים שיעשה את זה, והוא עושה. בעברית, בקול או בכתב.</p>
       <div class="cta">
@@ -429,18 +448,45 @@ footer .logo svg { width: 22px; height: 22px; } footer .logo b { font-size: 18px
       </div>
       <p class="fine">עובד עם חשבון Claude שכבר יש לך. בלי מפתחות, בלי הגדרות.</p>
     </div>
-    <div class="screen" id="heroScene" data-say="זה אני, בגרסה הקטנה" aria-label="הדגמה: Claudy מצביע על כפתור ההדגשה בתוכנת פתקים">
-      <div class="menubar"><span>Notes</span><span>File</span><span>Edit</span><span class="face"></span><span class="clock">09:41</span></div>
-      <div class="win notes">
-        <div class="bar"><i></i><i></i><i></i><span>סיכום פגישה</span></div>
-        <div class="side"><b></b><b></b><b></b><b></b></div>
-        <div class="tool"><u>B</u><u data-t="hl" style="color:#FFD27A">H</u><u>≡</u><u>☐</u></div>
-        <div class="page"><s style="width:62%"></s><s></s><s style="width:88%"></s><s style="width:74%; background:rgba(255,210,122,.35)"></s><s style="width:80%"></s><s style="width:46%"></s></div>
+    <div class="screen" id="heroScene" data-say="ככה אני עוזר" aria-label="הדגמה: שואלים את Claudy איך מחליפים רקע, והוא מראה איפה ללחוץ">
+      <div class="wall2" id="hWall"></div>
+      <div class="menubar"><span>הגדרות מערכת</span><span>עריכה</span><span class="face" id="hFace"></span><span class="clock">09:41</span></div>
+      <div class="win settings">
+        <div class="bar"><i></i><i></i><i></i><span>הגדרות מערכת</span></div>
+        <div class="side">
+          <div class="it"><i style="background:#3B82F6"></i>Wi-Fi</div>
+          <div class="it"><i style="background:#2563EB"></i>Bluetooth</div>
+          <div class="it"><i style="background:#0EA5E9"></i>רשת</div>
+          <div class="it on" data-t="disp"><i style="background:#6366F1"></i>מסך</div>
+          <div class="it" data-t="wall"><i style="background:#14B8A6"></i>טפט</div>
+          <div class="it"><i style="background:#EC4899"></i>צלילים</div>
+          <div class="it"><i style="background:#64748B"></i>מקלדת</div>
+        </div>
+        <div class="pane disp on" id="pDisp">
+          <h4>מסך</h4>
+          <div class="row"><span>בהירות</span><b><u style="width:62%"></u></b></div>
+          <div class="row"><span>גודל טקסט</span><b><u style="width:40%"></u></b></div>
+          <div class="row"><span>מצב לילה</span><em></em></div>
+        </div>
+        <div class="pane walls" id="pWall">
+          <h4>טפט</h4>
+          <div class="tiles">
+            <i style="background:linear-gradient(160deg,#3B2A52,#120D1B)" class="sel"></i>
+            <i style="background:linear-gradient(160deg,#4FB3D9,#1E4E8C)"></i>
+            <i data-t="tile" style="background:linear-gradient(160deg,#FFB45C,#E2532A 55%,#5B2A6E)"></i>
+            <i style="background:linear-gradient(160deg,#9BE15D,#00A88E)"></i>
+            <i style="background:linear-gradient(160deg,#F9D9E4,#C084FC)"></i>
+            <i style="background:linear-gradient(160deg,#334155,#0F172A)"></i>
+          </div>
+        </div>
       </div>
-      <div class="ring" id="hRing"></div>
-      <svg class="arrow" id="hArrow"><use href="#arrow"/></svg>
-      <div class="cl" id="hCl"><svg viewBox="0 0 120 80"><use href="#claudy"/></svg></div>
-      <div class="bubble" id="hBub">מסמנים את השורה, ואז לוחצים כאן. זה מדגיש בצהוב.</div>
+      <div class="hask" id="hAsk"><svg><use href="#mic"/></svg>"קלודי, איך מחליפים רקע?"</div>
+      <div class="ring" id="hRing" style="opacity:0"></div>
+      <span class="ripple" id="hRip"></span>
+      <svg class="arrow" id="hArrow" style="opacity:0"><use href="#arrow"/></svg>
+      <div class="cl" id="hCl" style="opacity:0"><svg viewBox="0 0 120 80"><use href="#claudy"/></svg></div>
+      <div class="bubble off" id="hBub"></div>
+      <svg class="check" id="hCheck" viewBox="0 0 40 40"><circle cx="20" cy="20" r="19" fill="#7DE3B5"/><path d="M11 20.5l6 6 12-13" fill="none" stroke="#1B1426" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
   </div>
 </header>
@@ -668,21 +714,56 @@ function say(b, text, x, y) {
   b.classList.remove("off"); place(b, x, y);
 }
 
-/* ---------- hero: Claudy points at the highlight button, then wanders ---------- */
+/* ---------- hero: you ask, Claudy comes out of the menu bar and shows where, the wallpaper changes ---------- */
+$$(".menubar .face").forEach(f => f.innerHTML = '<svg width="2.1em" height="1.4em" viewBox="0 0 120 80" style="vertical-align:middle"><use href="#claudy"/></svg>');
 (() => {
-  const st = $("#heroScene"), ring = $("#hRing"), arrow = $("#hArrow"), cl = $("#hCl"), bub = $("#hBub");
-  const tgt = $('[data-t="hl"]', st);
-  function go() {
-    const t = spot(st, tgt);
-    Object.assign(ring.style, { left: (t.x - t.w / 2 - .8) + "%", top: (t.y - t.h / 2 - 1.2) + "%", width: (t.w + 1.6) + "%", height: (t.h + 2.4) + "%" });
-    place(arrow, t.x + 1, t.y + 1);
-    place(cl, t.x + 6, t.y + 9);
-    place(bub, Math.max(2, t.x + 14), t.y + 6);
+  const st = $("#heroScene"), ring = $("#hRing"), arrow = $("#hArrow"), cl = $("#hCl"), bub = $("#hBub"), ask = $("#hAsk"),
+        face = $("#hFace"), rip = $("#hRip"), wall = $("#hWall"), check = $("#hCheck");
+  const T = sel => spot(st, $(sel, st));
+  const jump = (el, x, y) => { el.style.transition = "none"; place(el, x, y); el.offsetWidth; el.style.transition = ""; };
+  function pointAt(sel, text, bx, by) {
+    const t = T(sel);
+    Object.assign(ring.style, { opacity: 1, left: (t.x - t.w / 2 - .8) + "%", top: (t.y - t.h / 2 - 1.2) + "%", width: (t.w + 1.6) + "%", height: (t.h + 2.4) + "%" });
+    arrow.style.opacity = 1; place(arrow, t.x + 1, t.y + 1.5);
+    place(cl, clamp(t.x - 16, 2, 84), clamp(t.y + 6, 10, 80));
+    say(bub, text, clamp(t.x + (bx ?? -38), 2, 60), clamp(t.y + (by ?? 10), 8, 76));
   }
-  go(); addEventListener("resize", go); addEventListener("load", go);
-  document.fonts && document.fonts.ready.then(go);
-  // menu-bar face in every scene
-  $$(".menubar .face").forEach(f => f.innerHTML = '<svg width="2.1em" height="1.4em" viewBox="0 0 120 80" style="vertical-align:middle"><use href="#claudy"/></svg>');
+  function click(sel) { const t = T(sel); place(rip, t.x, t.y); rip.classList.toggle("go", false); rip.offsetWidth; rip.classList.add("go"); }
+  function reset() {
+    $("#pDisp").classList.add("on"); $("#pWall").classList.toggle("on", false);
+    $$('.settings .it', st).forEach(i => i.classList.toggle("on", i.dataset.t === "disp"));
+    $$('.tiles i', st).forEach((t, k) => t.classList.toggle("sel", k === 0));
+    wall.classList.toggle("on", false); check.classList.toggle("on", false); ask.classList.toggle("on", false);
+    ring.style.opacity = 0; arrow.style.opacity = 0; cl.style.opacity = 0; face.style.opacity = 1; say(bub, null);
+  }
+  const steps = [
+    [0, reset],
+    [700, () => ask.classList.add("on")],
+    [1700, () => {                                    // wakes up in the menu bar and comes out
+      const f = spot(st, face);
+      jump(cl, f.x - 3, f.y - 2); cl.style.opacity = 1; face.style.opacity = .2;
+      requestAnimationFrame(() => { const t = T('[data-t="wall"]'); place(cl, t.x - 16, t.y + 6); });
+    }],
+    [2700, () => pointAt('[data-t="wall"]', "זה כאן, ב'טפט'.")],
+    [4200, () => { click('[data-t="wall"]');
+      $$('.settings .it', st).forEach(i => i.classList.toggle("on", i.dataset.t === "wall"));
+      $("#pDisp").classList.toggle("on", false); $("#pWall").classList.add("on"); say(bub, null); ring.style.opacity = 0; }],
+    [5000, () => pointAt('[data-t="tile"]', "בוחרים תמונה, וזהו.", -10, 14)],
+    [6500, () => { click('[data-t="tile"]'); $$('.tiles i', st).forEach(t => t.classList.toggle("sel", t.dataset.t === "tile")); wall.classList.add("on"); }],
+    [7300, () => { ring.style.opacity = 0; arrow.style.opacity = 0; say(bub, null);
+      const c = spot(st, cl); place(check, c.x - 2, c.y - 16); check.classList.add("on"); }],
+    [9300, () => { check.classList.toggle("on", false); ask.classList.toggle("on", false);
+      const f = spot(st, face); place(cl, f.x - 3, f.y - 2); }],
+    [10100, () => { cl.style.opacity = 0; face.style.opacity = 1; }],
+  ];
+  const LOOP = 11000;
+  if (reduced) { reset(); ask.classList.add("on"); $("#pWall").classList.add("on"); cl.style.opacity = 1;
+    requestAnimationFrame(() => pointAt('[data-t="tile"]', "בוחרים תמונה, וזהו.", -10, 14)); return; }
+  let timers = [];
+  function run() { timers.forEach(clearTimeout); timers = steps.map(([t, f]) => setTimeout(f, t)); timers.push(setTimeout(run, LOOP)); }
+  const start = () => { if (!timers.length) run(); };
+  document.fonts ? document.fonts.ready.then(start) : start();
+  setTimeout(start, 800);
 })();
 
 /* ---------- scenes ---------- */
