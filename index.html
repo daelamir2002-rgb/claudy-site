@@ -261,40 +261,50 @@ nav .btn { margin-inline-start: 4px; }
 .plist div.on { background: rgba(255, 122, 43, .16); color: var(--mist); box-shadow: inset 0 0 0 1px rgba(255, 122, 43, .5); }
 .plist small { display: block; color: var(--mist-3); font-size: .85em; }
 
-/* examples player: tabs on top, the screen plays, the beats on the side light up in step */
-.tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
-.tab { all: unset; cursor: pointer; position: relative; overflow: hidden; padding: 10px 16px 12px; border-radius: 6px 18px 18px 18px;
-  background: rgba(255, 255, 255, .04); box-shadow: inset 0 0 0 1px var(--line); color: var(--mist-2); font-size: 15px; font-weight: 500; transition: background .2s, color .2s; }
-.tab:hover { color: var(--mist); background: rgba(255, 255, 255, .07); }
-.tab[aria-selected="true"] { color: var(--mist); background: rgba(255, 120, 20, .12); box-shadow: inset 0 0 0 1px rgba(255, 122, 43, .5); }
-.tab i { position: absolute; inset: auto 0 0 auto; height: 3px; width: calc(var(--p, 0) * 100%); background: var(--grad); }
-.tab:focus-visible { outline: 2px solid var(--ember-hi); outline-offset: 2px; }
-.player { display: grid; grid-template-columns: 1.35fr .85fr; gap: 40px; align-items: start; }
-.stagebox { position: relative; min-width: 0; }
-.stagebox .stage { display: none; }
-.stagebox .stage.on { display: block; }
-.playov { all: unset; position: absolute; inset: 0 0 44px 0; border-radius: 16px; cursor: pointer; z-index: 20; display: grid; place-content: center; justify-items: center; gap: 18px;
-  background: radial-gradient(60% 60% at 50% 50%, rgba(15, 11, 22, .55), rgba(15, 11, 22, .82)); backdrop-filter: blur(3px); transition: opacity .35s; text-align: center; padding: 20px; }
+/* examples: a carousel. The current example is big in the middle, its neighbours small at the sides,
+   dots below. It plays on demand and stops at the end with a "next" arrow; it never moves on by itself. */
+#demos { overflow-x: clip; }
+.carousel { --aw: min(780px, 66vw); position: relative; height: calc(var(--aw) * .65); }
+.slide { position: absolute; top: 0; left: 50%; width: var(--aw); z-index: 2;
+  transform: translateX(-50%) translateX(calc(var(--o, 0) * -82%)) scale(var(--sc, 1)); transform-origin: 50% 50%;
+  transition: transform .65s cubic-bezier(.3, .9, .3, 1), opacity .5s, filter .5s; }
+.slide .stage { display: block; }
+.slide.side { --sc: .7; opacity: .45; filter: saturate(.6) brightness(.8); cursor: pointer; z-index: 1; }
+.slide.side:hover { opacity: .7; }
+.slide.side * { pointer-events: none; }
+.slide.far { --sc: .6; opacity: 0; pointer-events: none; }
+.playov { all: unset; position: absolute; top: 0; left: 50%; width: var(--aw); height: 100%; transform: translateX(-50%); border-radius: 16px; cursor: pointer; z-index: 20;
+  display: grid; place-content: center; justify-items: center; gap: 18px; text-align: center; padding: 20px; box-sizing: border-box;
+  background: radial-gradient(60% 60% at 50% 50%, rgba(15, 11, 22, .5), rgba(15, 11, 22, .8)); backdrop-filter: blur(3px); transition: opacity .35s; }
 .playov.hide { opacity: 0; pointer-events: none; }
 .playov .sit { max-width: 26em; font-size: clamp(15px, 1.6vw, 19px); color: var(--mist); line-height: 1.5; text-wrap: balance; }
 .pbtn { width: 78px; height: 78px; border-radius: 50%; display: grid; place-items: center; color: var(--plum); background: var(--grad);
   box-shadow: 0 16px 40px -10px rgba(255, 122, 43, .9), 0 0 0 10px rgba(255, 122, 43, .14); transition: transform .25s cubic-bezier(.3, 1.6, .5, 1); }
-.pbtn svg { margin-right: -4px; }
+#playov .pbtn svg { margin-right: -4px; }
 .playov:hover .pbtn { transform: scale(1.08); }
+.nextov:hover .pbtn { transform: translateX(-6px) scale(1.06); }
 .playov:focus-visible .pbtn { outline: 3px solid var(--mist); outline-offset: 4px; }
-.pbar { display: flex; align-items: center; gap: 12px; margin-top: 12px; direction: ltr; }
+.pbar { display: flex; align-items: center; gap: 12px; margin: 14px auto 0; width: var(--aw, min(780px, 66vw)); max-width: 100%; direction: ltr; }
 .pbar button { all: unset; cursor: pointer; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: rgba(255, 255, 255, .07); color: var(--mist); }
 .pbar button:hover { background: rgba(255, 255, 255, .13); }
 .scrub { flex: 1; height: 4px; border-radius: 4px; background: var(--line); overflow: hidden; }
 .scrub i { display: block; height: 100%; width: 0; background: var(--grad); }
 #ptime { font: 500 12.5px var(--f-mono); color: var(--mist-3); font-variant-numeric: tabular-nums; min-width: 3.2em; }
-.explain { display: grid; gap: 14px; align-content: start; padding-top: 6px; min-width: 0; }
-.explain .kicker { font: 500 13px/1 var(--f-mono); color: var(--ember-hi); letter-spacing: .06em; }
+.dots { display: flex; justify-content: center; gap: 10px; margin-top: 18px; }
+.dots button { all: unset; cursor: pointer; width: 10px; height: 10px; border-radius: 10px; background: rgba(255, 255, 255, .22); position: relative; overflow: hidden;
+  transition: width .35s cubic-bezier(.3, 1.3, .5, 1), background .3s; }
+.dots button:hover { background: rgba(255, 255, 255, .4); }
+.dots button[aria-selected="true"] { width: 34px; background: rgba(255, 122, 43, .3); }
+.dots button i { position: absolute; inset: 0 0 0 auto; width: calc(var(--p, 0) * 100%); background: var(--grad); }
+.dots button:focus-visible { outline: 2px solid var(--ember-hi); outline-offset: 3px; }
+.explain { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 36px; align-items: start; margin: 34px auto 0; max-width: 980px; }
+.explain .ehead { display: grid; gap: 12px; align-content: start; }
+.explain .kicker { font: 500 14px/1 var(--f-body); color: var(--ember-hi); }
 .explain h3 { font-size: clamp(26px, 2.6vw, 36px); line-height: 1.1; }
 .explain .ask { display: inline-flex; gap: 10px; align-items: center; padding: 10px 16px; border-radius: 16px 4px 16px 16px;
   background: rgba(187, 168, 255, .12); border: 1px solid rgba(187, 168, 255, .25); font-size: 15px; width: fit-content; max-width: 100%; }
 .explain .ask svg { flex: none; width: 16px; height: 16px; color: var(--lilac); }
-.beats { list-style: none; margin: 6px 0 0; padding: 0; display: grid; gap: 4px; counter-reset: b; }
+.beats { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; counter-reset: b; }
 .beats li { counter-increment: b; display: grid; grid-template-columns: 30px 1fr; gap: 12px; align-items: start; padding: 10px 12px; border-radius: 6px 16px 16px 16px;
   color: var(--mist-3); transition: color .35s, background .35s; }
 .beats li::before { content: counter(b); width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font: 600 13px/1 var(--f-mono);
@@ -303,7 +313,7 @@ nav .btn { margin-inline-start: 4px; }
 .beats li.done::before { background: rgba(125, 227, 181, .16); color: var(--mint); content: "✓"; }
 .beats li.now { color: var(--mist); background: rgba(255, 255, 255, .045); }
 .beats li.now::before { background: var(--grad); color: var(--plum); }
-.explain .next { font-size: 13.5px; color: var(--mist-3); min-height: 1.4em; }
+@media (max-width: 920px) { .carousel { --aw: 84vw; } .pbar { width: 84vw; } .explain { grid-template-columns: 1fr; gap: 18px; } }
 
 /* capabilities */
 .caps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
@@ -317,8 +327,8 @@ nav .btn { margin-inline-start: 4px; }
 .cap q { quotes: none; font-size: 14px; color: var(--lilac); }
 .reveal { transition: opacity .6s ease, transform .6s cubic-bezier(.2, .8, .2, 1); }
 .reveal.pre { opacity: 0; transform: translateY(24px); }
-@media (max-width: 920px) { .player { grid-template-columns: 1fr; gap: 22px; } .caps { grid-template-columns: 1fr 1fr; } }
-@media (max-width: 560px) { .caps { grid-template-columns: 1fr; } .tab { padding: 8px 12px 10px; font-size: 14px; } }
+@media (max-width: 920px) { .caps { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 560px) { .caps { grid-template-columns: 1fr; } }
 
 /* faces */
 .faces { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; padding-bottom: 40px; }
@@ -331,6 +341,11 @@ nav .btn { margin-inline-start: 4px; }
 
 /* ways in */
 .ways { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.ways.two { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 820px; }
+.way .wic { width: 56px; height: 56px; border-radius: 6px 18px 18px 18px; display: grid; place-items: center; background: var(--grad); color: var(--plum);
+  box-shadow: 0 12px 30px -12px rgba(255, 122, 43, .8); }
+.way .wic svg { width: 28px; height: 28px; }
+.way h3 { font-size: 26px; }
 .way { padding: 26px; border-radius: 6px 26px 26px 26px; background: rgba(255, 255, 255, .03); box-shadow: inset 0 0 0 1px var(--line); display: grid; gap: 12px; align-content: start; }
 .way .keys { display: flex; gap: 8px; direction: ltr; justify-content: flex-end; }
 .way kbd { min-width: 42px; height: 42px; padding: 0 10px; display: grid; place-items: center; border-radius: 9px; font: 600 17px/1 var(--f-mono); color: var(--mist);
@@ -339,7 +354,7 @@ nav .btn { margin-inline-start: 4px; }
 .way p { color: var(--mist-2); font-size: 15.5px; }
 
 .privacy { margin-top: 110px; display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: start; padding-block: 48px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-.privacy h2 { font-size: clamp(30px, 3.4vw, 44px); line-height: 1.1; }
+.privacy h2 { font-size: clamp(30px, 3.4vw, 44px); line-height: 1.1; margin: 0; }
 .privacy ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 16px; }
 .privacy li { display: grid; grid-template-columns: 22px 1fr; gap: 12px; color: var(--mist-2); }
 .privacy li::before { content: ""; width: 10px; height: 10px; margin-top: 9px; border-radius: 1px 10px 10px 10px; background: var(--grad); }
@@ -439,14 +454,14 @@ footer .logo svg { width: 22px; height: 22px; } footer .logo b { font-size: 18px
 <header class="hero" id="top">
   <div class="wrap">
     <div>
-      <span class="eyebrow" style="font-family:var(--f-body);text-transform:none;letter-spacing:.02em;font-size:14px">ל-Mac, ובקרוב ל-Windows</span>
+      <span class="eyebrow" style="font-family:var(--f-body);text-transform:none;letter-spacing:.02em;font-size:14px">זמין ל-Mac, בקרוב ל-Windows</span>
       <h1>עוזר שיושב לך <em>על המסך</em></h1>
-      <p class="lead">Claudy רואה את המסך יחד איתך. שואלים אותו איך עושים משהו, והוא מצביע על הכפתור הנכון. מבקשים שיעשה את זה, והוא עושה. בעברית, בקול או בכתב.</p>
+      <p class="lead">Claudy רואה את המסך יחד איתך. שואלים אותו איך עושים משהו, והוא מצביע על הכפתור הנכון. מבקשים שיעשה את זה, והוא עושה. באיזו שפה שבא לכם, בקול או בכתב.</p>
       <div class="cta">
         <a class="btn" href="#download" data-say="בוא נתקין אותי"><svg width="18" height="18"><use href="#apple"/></svg>הורדה ל-Mac</a>
         <a class="btn ghost" href="#demos" data-say="גוללים, ואני מראה">ככה זה נראה</a>
       </div>
-      <p class="fine">עובד עם חשבון Claude שכבר יש לך. בלי מפתחות, בלי הגדרות.</p>
+      <p class="fine">עובד עם חשבון Claude שכבר יש לך.</p>
     </div>
     <div class="screen" id="heroScene" data-say="ככה אני עוזר" aria-label="הדגמה: שואלים את Claudy איך מחליפים רקע, והוא מראה איפה ללחוץ">
       <div class="wall2" id="hWall"></div>
@@ -494,19 +509,20 @@ footer .logo svg { width: 22px; height: 22px; } footer .logo b { font-size: 18px
 <main>
 <section class="wrap" id="demos">
   <div class="section-head">
-    <span class="eyebrow">דוגמאות</span>
-    <h2>ככה זה נראה ביום רגיל</h2>
-    <p>שש בקשות אמיתיות. בוחרים כרטיסייה, לוחצים על פליי, ומשמאל רואים מה Claudy עושה בכל רגע.</p>
+    <h2>איך תשתמשו בו ביום-יום?</h2>
+    <p>כמה דוגמאות קטנות, וזו רק ההתחלה. כל מה ש-Claude יודע לעשות, Claudy עושה על המסך שלכם, ויש בזה הרבה יותר ממה שנכנס לעמוד אחד.</p>
   </div>
-  <div class="tabs" role="tablist" aria-label="דוגמאות"><button class="tab" role="tab" data-i="0" aria-selected="false"><span>סידור קבצים</span><i></i></button><button class="tab" role="tab" data-i="1" aria-selected="false"><span>הדרכה בתוכנה</span><i></i></button><button class="tab" role="tab" data-i="2" aria-selected="false"><span>הכתבה</span><i></i></button><button class="tab" role="tab" data-i="3" aria-selected="false"><span>המדף</span><i></i></button><button class="tab" role="tab" data-i="4" aria-selected="false"><span>שליחת הודעה</span><i></i></button><button class="tab" role="tab" data-i="5" aria-selected="false"><span>פרויקט קוד</span><i></i></button></div>
-  <div class="player">
-    <div class="stagebox">
+  <div class="carousel" id="car" aria-roledescription="קרוסלה">
+    <div class="slide" data-i="0">
       <div class="screen stage" data-scene="desk" data-say="תראו כמה בלגן">
       <div class="menubar"><span>Finder</span><span>File</span><span>View</span><span class="face"></span><span class="clock">16:20</span></div>
       <div class="desk"></div>
       <div class="cl"><svg viewBox="0 0 120 80"><use href="#claudy"/></svg></div>
       <div class="bubble off"></div>
-    </div><div class="screen stage" data-scene="edit" data-say="שלושה צעדים, זה הכל">
+    </div>
+    </div>
+    <div class="slide" data-i="1">
+      <div class="screen stage" data-scene="edit" data-say="שלושה צעדים, זה הכל">
       <div class="menubar"><span>Editor</span><span>File</span><span>Clip</span><span class="face"></span><span class="clock">11:05</span></div>
       <div class="win ed">
         <div class="bar"><i></i><i></i><i></i><span>טיול לים.mov</span></div>
@@ -523,7 +539,10 @@ footer .logo svg { width: 22px; height: 22px; } footer .logo b { font-size: 18px
       <div class="cl"><svg viewBox="0 0 120 80"><use href="#claudy"/></svg></div>
       <div class="bubble off"></div>
       <div class="steps"><i></i><i></i><i></i></div>
-    </div><div class="screen stage" data-scene="dict" data-say="אני מקשיב">
+    </div>
+    </div>
+    <div class="slide" data-i="2">
+      <div class="screen stage" data-scene="dict" data-say="אני מקשיב">
       <div class="menubar"><span>Messages</span><span>Edit</span><span class="face"></span><span class="clock">18:47</span></div>
       <div class="win chat">
         <div class="bar"><i></i><i></i><i></i><span>אמא</span></div>
@@ -533,7 +552,10 @@ footer .logo svg { width: 22px; height: 22px; } footer .logo b { font-size: 18px
       <div class="key" style="left:8%; bottom:5%">⌥<small>right</small></div>
       <div class="wave" style="left:22%; bottom:8%"></div>
       <div class="cl"><svg viewBox="0 0 120 80"><use href="#claudy"/></svg></div>
-    </div><div class="screen stage" data-scene="shelf" data-say="תנו לי, אני אחזיק">
+    </div>
+    </div>
+    <div class="slide" data-i="3">
+      <div class="screen stage" data-scene="shelf" data-say="תנו לי, אני אחזיק">
       <div class="menubar"><span>Safari</span><span>File</span><span class="face"></span><span class="clock">13:12</span></div>
       <div class="win" style="left:6%; top:42%; width:56%; height:52%">
         <div class="bar"><i></i><i></i><i></i><span>טופס הגשה</span></div>
@@ -542,7 +564,10 @@ footer .logo svg { width: 22px; height: 22px; } footer .logo b { font-size: 18px
       <div class="desk"></div>
       <div class="strip" style="opacity:0"></div>
       <div class="cl" style="width:3.4em;height:2.4em"><svg viewBox="0 0 120 80"><use href="#claudy"/></svg><span class="badge" style="transform:scale(0)">0</span></div>
-    </div><div class="screen stage" data-scene="hands" data-say="שנייה, אני על זה">
+    </div>
+    </div>
+    <div class="slide" data-i="4">
+      <div class="screen stage" data-scene="hands" data-say="שנייה, אני על זה">
       <div class="menubar"><span>Messages</span><span>Edit</span><span class="face"></span><span class="clock">19:02</span></div>
       <div class="win msgr">
         <div class="bar"><i></i><i></i><i></i><span>הודעות</span></div>
@@ -558,7 +583,10 @@ footer .logo svg { width: 22px; height: 22px; } footer .logo b { font-size: 18px
       <svg class="arrow"><use href="#arrow"/></svg>
       <div class="cl"><svg viewBox="0 0 120 80"><use href="#claudy"/></svg></div>
       <svg class="check" viewBox="0 0 40 40"><circle cx="20" cy="20" r="19" fill="#7DE3B5"/><path d="M11 20.5l6 6 12-13" fill="none" stroke="#1B1426" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </div><div class="screen stage" data-scene="proj" data-say="קסדה, ויאללה לעבודה">
+    </div>
+    </div>
+    <div class="slide" data-i="5">
+      <div class="screen stage" data-scene="proj" data-say="קסדה, ויאללה לעבודה">
       <div class="menubar"><span>Claude</span><span class="face"></span><span class="clock">22:30</span></div>
       <div class="win plist">
         <div data-p="0">video-bot<small>בוט הורדת סרטונים</small></div>
@@ -579,25 +607,30 @@ footer .logo svg { width: 22px; height: 22px; } footer .logo b { font-size: 18px
       <div class="cl"><svg viewBox="0 0 120 80"><use href="#claudy"/></svg></div>
       <div class="bubble off"></div>
     </div>
-      <button class="playov" id="playov" aria-label="הפעלה">
-        <span class="sit" id="sit"></span>
-        <span class="pbtn"><svg viewBox="0 0 24 24" width="30" height="30"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></svg></span>
-      </button>
-      <div class="pbar"><button id="pp" aria-label="השהיה"><svg viewBox="0 0 24 24" width="16" height="16"><path id="ppIcon" d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" fill="currentColor"/></svg></button><div class="scrub"><i id="scrubFill"></i></div><span id="ptime">0:00</span></div>
     </div>
-    <div class="explain">
+    <button class="playov" id="playov" aria-label="הפעלה">
+      <span class="sit" id="sit"></span>
+      <span class="pbtn"><svg viewBox="0 0 24 24" width="30" height="30"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></svg></span>
+    </button>
+    <button class="playov nextov hide" id="nextov" aria-label="לדוגמה הבאה">
+      <span class="pbtn"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></span>
+      <span class="sit" id="nextLabel"></span>
+    </button>
+  </div>
+  <div class="pbar"><button id="pp" aria-label="השהיה"><svg viewBox="0 0 24 24" width="16" height="16"><path id="ppIcon" d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" fill="currentColor"/></svg></button><div class="scrub"><i id="scrubFill"></i></div><span id="ptime">0:00</span></div>
+  <div class="dots" id="dots" role="tablist" aria-label="דוגמאות"></div>
+  <div class="explain">
+    <div class="ehead">
       <span class="kicker" id="exKick"></span>
       <h3 id="exTitle"></h3>
       <div class="ask" id="exAsk"><svg><use href="#mic"/></svg><span></span></div>
-      <ol class="beats" id="beats"></ol>
-      <p class="next" id="exNext"></p>
     </div>
+    <ol class="beats" id="beats"></ol>
   </div>
 </section>
 
 <section class="wrap" id="can">
   <div class="section-head">
-    <span class="eyebrow">יכולות</span>
     <h2>מה Claudy יכול לעשות?</h2>
     <p>כל מה ש-Claude יודע, עם עיניים על המסך וידיים על המקלדת.</p>
   </div>
@@ -606,35 +639,28 @@ footer .logo svg { width: 22px; height: 22px; } footer .logo b { font-size: 18px
 
 <section class="wrap">
   <div class="section-head">
-    <span class="eyebrow">איך מדברים איתו</span>
-    <h2>שלוש דרכים, כולן מכל מקום</h2>
+    <h2>דברו איתו איך שנוח לכם</h2>
   </div>
-  <div class="ways">
-    <div class="way" data-say="נגיעה קטנה ואני ער">
-      <div class="keys"><kbd style="padding:0 8px"><svg width="34" height="23" viewBox="0 0 120 80"><use href="#claudy"/></svg></kbd></div>
-      <h3>לחיצה עליו</h3>
-      <p>הוא גר בשורת התפריטים, ישן בשקט. לחיצה מעירה אותו, והוא בא לשבת ליד העכבר.</p>
+  <div class="ways two">
+    <div class="way" data-say="כתבו לי, אני קורא">
+      <span class="wic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H9l-5 4V6a1 1 0 0 1 1-1z"/><path d="M8 10h8M8 13h5"/></svg></span>
+      <h3>הודעה</h3>
+      <p>כותבים לו, והוא עונה בבועה קטנה ליד העכבר.</p>
     </div>
-    <div class="way" data-say="מחזיקים ומדברים">
-      <div class="keys"><kbd>⌥</kbd></div>
-      <h3>להחזיק ⌥ ימני</h3>
-      <p>כשהסמן בשדה טקסט, מה שאומרים נכתב שם. כשפונים אליו בשם, "קלודי…", זו בקשה.</p>
-    </div>
-    <div class="way" data-say="או פשוט לכתוב לי">
-      <div class="keys"><kbd>⌃</kbd><kbd>⌥</kbd><kbd>C</kbd></div>
-      <h3>לכתוב לו</h3>
-      <p>תיבה קטנה נפתחת ליד העכבר. כותבים, Enter, וממשיכים לעבוד בזמן שהוא חושב.</p>
+    <div class="way" data-say="דברו, אני מקשיב">
+      <span class="wic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span>
+      <h3>מיקרופון</h3>
+      <p>אומרים, והוא שומע. בכל שפה, וגם הכתבה ישר לכל שדה.</p>
     </div>
   </div>
 
   <div class="privacy" id="privacy">
     <div>
-      <span class="eyebrow">פרטיות</span>
-      <h2 style="margin-top:14px">מה הוא רואה, ומתי</h2>
+      <h2>Claudy שומר על הפרטיות שלכם</h2>
     </div>
     <ul>
-      <li><span><b>צילום מסך רק כשפונים אליו.</b> הוא לא מצלם ברקע ולא שומר תמונות אחרי שענה.</span></li>
-      <li><span><b>מנהלי סיסמאות חסומים תמיד.</b> 1Password, Keychain ודומיהם לא נכנסים לצילום ולא לידיים שלו.</span></li>
+      <li><span><b>מצלם את המסך רק כשצריך.</b> כדי לראות את המסך Claudy מצלם אותו. הוא לא שומר את התמונות אחרי שענה, וכמובן לא מצלם ברקע כשאין בזה צורך.</span></li>
+      <li><span><b>הסיסמאות שלכם נשארות שלכם.</b> מנהלי סיסמאות לא נכנסים לתמונות שהוא מצלם ולא לזיכרון שלו, גם אם תבקשו ממנו.</span></li>
       <li><span><b>ההכתבה מתומללת על המחשב.</b> הקול לא יוצא החוצה, רק הטקסט.</span></li>
       <li><span><b>תשלום, כניסה לחשבון או מחיקה דורשים אישור.</b> כל השאר קורה בלי לשאול.</span></li>
     </ul>
@@ -974,68 +1000,86 @@ const META = {
 };
 const DUR = 11000;
 const player = (() => {
-  const tabsEl = $$(".tab"), stagesEl = $$(".stagebox .stage"), ov = $("#playov"), beatsEl = $("#beats");
+  const car = $("#car"), slides = $$("#car .slide"), stagesEl = slides.map(sl => $(".stage", sl));
+  const ov = $("#playov"), nx = $("#nextov"), beatsEl = $("#beats");
   const order = stagesEl.map(st => st.dataset.scene);
   const runs = stagesEl.map(st => scenes[st.dataset.scene](st));
-  let cur = 0, t = 0, playing = false, started = false, lastT = 0, endHold = 0;
+  $("#dots").innerHTML = order.map((n, i) => `<button role="tab" aria-label="${META[n].title}" title="${META[n].title}" data-i="${i}"><i></i></button>`).join("");
+  const dots = $$("#dots button");
+  let cur = 0, t = 0, playing = false, started = false, lastT = 0;
+  function layout() {
+    slides.forEach((sl, i) => {
+      const o = i - cur;
+      sl.style.setProperty("--o", o);
+      sl.classList.toggle("side", Math.abs(o) === 1);
+      sl.classList.toggle("far", Math.abs(o) > 1);
+      sl.setAttribute("aria-hidden", o !== 0);
+    });
+    dots.forEach((d, i) => { d.setAttribute("aria-selected", i === cur); d.style.setProperty("--p", 0); });
+  }
   function select(i, autoplay) {
-    cur = i; t = 0; endHold = 0;
-    tabsEl.forEach((b, k) => { b.setAttribute("aria-selected", k === i); b.style.setProperty("--p", 0); });
-    stagesEl.forEach((st, k) => st.classList.toggle("on", k === i));
-    const m = META[order[i]];
-    $("#exKick").textContent = `0${i + 1} · ${m.kick}`;
+    cur = (i + order.length) % order.length; t = 0;
+    layout();
+    const m = META[order[cur]];
+    $("#exKick").textContent = `${m.kick} · ${cur + 1} מתוך ${order.length}`;
     $("#exTitle").textContent = m.title;
     $("#exAsk span").textContent = `"${m.ask}"`;
     $("#sit").textContent = m.sit;
     beatsEl.innerHTML = m.beats.map(([, txt]) => `<li>${txt}</li>`).join("");
-    $("#exNext").textContent = "";
-    runs[i](0, performance.now());
+    runs[cur](0, performance.now());
     playing = !!autoplay;
     ov.classList.toggle("hide", playing);
+    nx.classList.add("hide");
     draw();
+  }
+  function finished() {
+    playing = false;
+    const last = cur === order.length - 1;
+    $("#nextLabel").textContent = last ? "מההתחלה" : `הבא: ${META[order[cur + 1]].title}`;
+    nx.classList.remove("hide");
   }
   function draw() {
     const p = clamp(t / DUR), m = META[order[cur]];
-    tabsEl[cur].style.setProperty("--p", p);
+    dots[cur].style.setProperty("--p", p);
     $("#scrubFill").style.width = p * 100 + "%";
-    const sec = Math.floor(t / 1000); $("#ptime").textContent = `0:${String(sec).padStart(2, "0")}`;
+    $("#ptime").textContent = `0:${String(Math.floor(t / 1000)).padStart(2, "0")}`;
     $("#ppIcon").setAttribute("d", playing ? "M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" : "M8 5.5v13l10.5-6.5z");
     const lis = $$("li", beatsEl);
-    let now = -1; m.beats.forEach(([at], k) => { if (p >= at && (t > 0)) now = k; });
+    let now = -1; m.beats.forEach(([at], k) => { if (t > 0 && p >= at) now = k; });
     lis.forEach((li, k) => { li.className = k < now || (p >= 1 && k === now) ? "done" : k === now ? "now" : ""; });
   }
   function loop(ts) {
     const dt = Math.min(400, ts - (lastT || ts)); lastT = ts;
     if (playing) {
-      if (t < DUR) { t = Math.min(DUR, t + dt); runs[cur](t / DUR, ts); }
-      else {
-        endHold += dt;
-        const nxt = (cur + 1) % order.length;
-        $("#exNext").textContent = `עוד רגע: ${META[order[nxt]].title}`;
-        if (endHold > 2600) select(nxt, true);
-      }
+      t = Math.min(DUR, t + dt); runs[cur](t / DUR, ts);
+      if (t >= DUR) finished();
       draw();
     } else if (order[cur] === "dict") runs[cur](t / DUR, ts);
     requestAnimationFrame(loop);
   }
-  ov.addEventListener("click", () => { started = true; if (t >= DUR) t = 0; playing = true; ov.classList.add("hide"); draw(); });
+  const play = () => { started = true; if (t >= DUR) t = 0; playing = true; ov.classList.add("hide"); nx.classList.add("hide"); draw(); };
+  ov.addEventListener("click", play);
+  nx.addEventListener("click", () => select(cur + 1, true));
   $("#pp").addEventListener("click", () => {
     if (t >= DUR) { select(cur, true); return; }
-    playing = !playing; started = true; ov.classList.toggle("hide", playing || t > 0); draw();
+    if (playing) { playing = false; draw(); } else play();
   });
-  tabsEl.forEach((b, i) => b.addEventListener("click", () => select(i, started)));
-  $(".stagebox").addEventListener("keydown", e => { if (e.key === " ") { e.preventDefault(); $("#pp").click(); } });
-  // pause when the player scrolls out of view, resume when it's back
+  dots.forEach((d, i) => d.addEventListener("click", () => select(i, false)));
+  slides.forEach((sl, i) => sl.addEventListener("click", () => { if (i !== cur) select(i, false); }));
+  car.addEventListener("keydown", e => {
+    if (e.key === "ArrowLeft") { select(cur + 1, false); e.preventDefault(); }       // RTL: left is forward
+    if (e.key === "ArrowRight") { select(cur - 1, false); e.preventDefault(); }
+  });
   let wasPlaying = false;
   new IntersectionObserver(([e]) => {
     if (!e.isIntersecting) { wasPlaying = playing; playing = false; draw(); }
     else if (wasPlaying) { playing = true; wasPlaying = false; }
-  }, { threshold: .25 }).observe($(".player"));
+  }, { threshold: .25 }).observe(car);
   select(0, false);
   requestAnimationFrame(loop);
   return { select, seek(p) { t = p * DUR; runs[cur](p, performance.now()); draw(); } };
 })();
-window.__goto = (name, p) => { const i = $$(".stagebox .stage").findIndex(s => s.dataset.scene === name); player.select(i, false); $("#playov").classList.add("hide"); player.seek(p); };
+window.__goto = (name, p) => { const i = $$("#car .stage").findIndex(s => s.dataset.scene === name); player.select(i, false); $("#playov").classList.add("hide"); player.seek(p); };
 
 /* ---------- capabilities ---------- */
 (() => {
